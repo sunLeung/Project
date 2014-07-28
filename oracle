@@ -1,0 +1,23 @@
+SYS
+SYSTEM
+123456
+
+目标文件夹: C:\oraclexe\
+Oracle 主目录: C:\oraclexe\app\oracle\product\11.2.0\server\
+Oracle 基目录:C:\oraclexe\
+'Oracle 数据库监听程序' 的端口: 1521
+'Oracle Services for Microsoft Transaction Server' 的端口: 2030
+'Oracle HTTP 监听程序' 的端口: 8080
+
+
+conn system/123456 as sysdba
+
+
+常用：
+sqlplus username/password  如：普通用户登录  sqlplus scott/tiger
+sqlplus username/password@net_service_name 如: sqlplus scott/tiger@orcl
+sqlplus  username/password as sysdba 如：sqlplus sys/admin as sysdba
+sqlplus username/password@//host:port/sid 
+注意：sys和system需要以sysdba登录
+ 
+在进入sql*plus之后，可以使用conn连接到其他用户，如：conn sys/admin as sysdba
