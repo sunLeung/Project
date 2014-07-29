@@ -21,3 +21,17 @@ sqlplus username/password@//host:port/sid
 注意：sys和system需要以sysdba登录
  
 在进入sql*plus之后，可以使用conn连接到其他用户，如：conn sys/admin as sysdba
+
+
+
+安装步骤5
+创建新windows用户
+用户名：liangyx
+口令：liangyx
+
+oracle 基目录：F:\app\liangyx
+软件位置：F:\app\liangyx\product\12.1.0\dbhome_1
+数据库文件位置：F:\app\liangyx\oradata
+
+数据版本个人版3.53GB
+字符集：ZHS 16GBK
