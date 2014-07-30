@@ -1,0 +1,5 @@
+[
+	{"unionid":"1","name":"百度91_android","loginService":"baidu91_android","version":"1.0","uri":"/91_android/appid","params":"AppId,AppKey"},
+	{"unionid":"2","name":"百度91_ios","loginService":"test","version":"1.0","uri":"/91_ios/appid","params":"AppId,AppKey"},
+	{"unionid":"151","name":"pp","loginService":"test","version":"1.0","uri":"/ppasset/appid","params":""}
+]

@@ -1,0 +1,5 @@
+[
+	{"resource":"/admin/createApp","authCode":1},
+	{"resource":"/admin/updateApp","authCode":2},
+	{"resource":"/admin/deleteAppById","authCode":3}
+]

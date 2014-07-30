@@ -1,0 +1,17 @@
+	<div ng-show="checkAuth(constant.AUTH_CREATE_APP)">
+		<a ng-click="initappBean()" data-toggle="modal" data-target="#myModal" class="btn btn-lg btn-primary" style="float:right;margin:10px;"><span class="fui-plus"></span>添加应用</a>
+	</div>
+    <table class="table table-hover default-border">
+    	<thead>
+    		<td>应用ID</td>
+    		<td>应用名称</td>
+    		<td>回调地址</td>
+    		<td ng-show="checkAuth(constant.AUTH_DELETE_APP)">操作</td>
+    	</thead>
+    	<tr ng-repeat="app in appsContent">
+    		<td ng-bind="app.appid" style="cursor: pointer;" ng-click="openAppInfo(app)"></td>
+    		<td ng-bind="app.appname" style="cursor: pointer;" ng-click="openAppInfo(app)"></td>
+    		<td style="cursor: pointer;" ng-click="openAppInfo(app)">http://{url}/callpay/{union}/{{app.appid}}</td>
+    		<td ng-show="checkAuth(constant.AUTH_DELETE_APP)"><button ng-click="deleteApp(app)" class="btn btn-danger">删除</button></td>
+    	</tr>
+    </table>

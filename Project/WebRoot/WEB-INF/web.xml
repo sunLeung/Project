@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+	
+	<listener>
+		<listener-class>common.listener.InitListener</listener-class>
+	</listener>
+	
+	<!-- 支付服务路由 -->
+	<servlet>
+		<servlet-name>payrouter</servlet-name>
+		<servlet-class>common.route.PayServiceRouter</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>payrouter</servlet-name>
+		<url-pattern>/pay/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 登陆服务路由  -->
+	<servlet>
+		<servlet-name>loginrouter</servlet-name>
+		<servlet-class>common.route.LoginServiceRouter</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	<servlet-name>loginrouter</servlet-name>
+		<url-pattern>/login/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 管理后台数据路由 -->
+	<servlet>
+		<servlet-name>adminroute</servlet-name>
+		<servlet-class>common.admin.AdminServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>adminroute</servlet-name>
+		<url-pattern>/admin/*</url-pattern>
+	</servlet-mapping>
+	<!-- 管理后台登陆检查 -->
+	<filter>
+		<filter-name>loginFilter</filter-name>
+		<filter-class>common.admin.AdminFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>loginFilter</filter-name>
+		<url-pattern>/admin.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>loginFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
+</web-app>
