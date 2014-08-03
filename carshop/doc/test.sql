@@ -1,3 +1,14 @@
+DROP TABLE vehicle;
+CREATE TABLE vehicle (
+  id char(32) NOT NULL,
+  vin VARCHAR2(20) DEFAULT NULL,
+  register_no VARCHAR2(20) DEFAULT NULL,
+  model VARCHAR2(30) DEFAULT NULL,
+  member_id VARCHAR2(30) DEFAULT NULL
+);
+
+insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','ç²¤AMe168','å¤§ä¼—é«˜å°”å¤«','liangyx');
+
 CREATE TABLE appointment_team (
   id char(32) NOT NULL,
   branch_id char(32) DEFAULT NULL,
@@ -28,11 +39,11 @@ CREATE TABLE appointment_consultant (
   modiry_time DATE DEFAULT NULL
 );
 
-insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','shop01','shop01¹ËÎÊA');
-insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','shop01','shop01¹ËÎÊB');
-insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','shop01','shop01¹ËÎÊC');
-insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','shop02','shop02¹ËÎÊA');
-insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02¹ËÎÊB');
+insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','shop01','shop01ï¿½ï¿½ï¿½ï¿½A');
+insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','shop01','shop01ï¿½ï¿½ï¿½ï¿½B');
+insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','shop01','shop01ï¿½ï¿½ï¿½ï¿½C');
+insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','shop02','shop02ï¿½ï¿½ï¿½ï¿½A');
+insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02ï¿½ï¿½ï¿½ï¿½B');
 select * from appointment_consultant;
 
 CREATE TABLE appointment_team_capacity_cfg (

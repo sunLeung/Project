@@ -11,8 +11,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.car.dao.ReserveDao;
+import com.car.utils.UserUtils;
 
 @Service
 public class ReserveService {
@@ -67,14 +70,16 @@ public class ReserveService {
 		List<Map<String,Object>> appointmentTime=this.getDAO().getAppointmentTime();
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Date> distinct=new ArrayList<Date>();
 		for(Map<String,Object> map:appointmentTime){
 			String tid=(String)map.get("team_id");
 			Date date=(Date)map.get("appointment_start");
-			if(filterTeamis.contains(tid)){
+			if(filterTeamis.contains(tid)&&!distinct.contains(date)){
 				Map<String,String> temp=new HashMap<String, String>();
 				temp.put("id", sdf.format(date));
 				temp.put("time", sdf.format(date));
 				result.add(temp);
+				distinct.add(date);
 			}
 		}
 		if(result.size()==0){
@@ -136,23 +141,55 @@ public class ReserveService {
 	 * @param timeid
 	 * @return
 	 */
-	public List<Map<String,String>> getConsultant(String shopid,String timeid){
-		List<Map<String,Object>> teamids= this.getDAO().getShopTeam(shopid);
-		//取出这间店的所以班组id
-		List<String> filterTeamis=new ArrayList<String>();
-		for(Map<String,Object> map:teamids){
-			String id=(String)map.get("id");
-			filterTeamis.add(id);
+	public List<Map<String,String>> getConsultant(String shopid,String time){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = null;
+		try {
+			d = sdf.parse(time);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-		
-		
-		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
-		Map<String,String> map=new HashMap<String, String>();
-		map.put("id", "adk");
-		map.put("name", "梁宇新");
-		result.add(map);
+		List<Map<String,String>> result=this.getDAO().getAppointmentConsultant(d,shopid);
+		if(result.size()<=0){
+			Map<String,String> map=new HashMap<String, String>();
+			map.put("id", "other");
+			map.put("name", "没有顾问");
+			result.add(map);
+		}
 		return result;
 	}
 	
+	/**
+	 * 创建预约
+	 * @param openid
+	 * @param appointmentid
+	 * @param carid
+	 * @param isOther
+	 * @param otherCarNum
+	 * @param otherCarVin
+	 * @param timeid
+	 * @param teamid
+	 * @param consultantid
+	 * @return
+	 */
+	public Map<String, String> createAppointment(String openid,String appointmentid,
+			String carid, boolean isOther, String otherCarNum,
+			String otherCarVin, String timeid, String teamid,
+			String consultantid) {
+		return this.getDAO().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin, timeid, teamid, consultantid);
+	}
 	
+	/**
+	 * 查询预约
+	 * @param openid
+	 * @return
+	 */
+	public List<Map<String,Object>> queryAppointment(String openid){
+		String uid=UserUtils.getUserIdByOpenId(openid);
+		return this.getDAO().getAppointment(uid);
+	}
+	
+	public int deleteAppointment(String aid){
+		return this.getDAO().deleteAppointment(aid);
+	}
 }

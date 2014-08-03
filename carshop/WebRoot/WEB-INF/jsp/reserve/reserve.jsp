@@ -15,14 +15,15 @@
 		<div>
 			<span>选择车型</span>
 			<select id="select_car" name="carid">
-				<c:if test="${!empty mycar}" >
+				
 				<optgroup label="我的车型">
+					<c:if test="${!empty mycar}" >
 					<c:forEach var="item" items="${mycar}" varStatus="status"> 
 						<option value="${item.id}">${item.model }&nbsp;${item.register_no }</option>
 					</c:forEach>
+					</c:if>
 					<option value="other">手动输入</option>
 				</optgroup>
-				</c:if>
 			</select>
 			<span id="other_car" style="display: none;">
 			<label>车牌：</label>
@@ -61,7 +62,6 @@
 		</div>
 		<div><input id="create" type="submit" value="预约"/><span id="result"></span></div>
 </div>
-
 </body>
 
 <!-- scripts -->
@@ -102,11 +102,12 @@ $(document).ready(function(){
 		var val=$(this).val();
 		var shopid=$("#select_shop").val();
 		loadTeam(shopid,val);
+		loadConsultant(shopid,val);
 	});
 	
 	/**加载预约时间*/
 	function loadSelectTime(shopid){
-		if(shopid!=""){
+		if(shopid!=""&&shopid!="other"){
 			$.ajax({
 	             type: "GET",
 	             url: "/reserve/getSelectTime.do",
@@ -127,7 +128,7 @@ $(document).ready(function(){
 	            	var shopid=$("#select_shop").val();
 	            	//加载班组和顾问
 	            	loadTeam(shopid,timeid);
-	            	loadConsultant(timeid);
+	            	loadConsultant(shopid,timeid);
 	             }
 	         	});
 			}
@@ -135,7 +136,7 @@ $(document).ready(function(){
 	
 	/**加载班组*/
 	function loadTeam(shopid,timeid){
-		if(timeid!=""){
+		if(timeid!=""&&timeid!="other"&&shopid!=""&&shopid!="other"){
 			$.ajax({
 	             type: "GET",
 	             url: "/reserve/getTeam.do",
@@ -147,7 +148,7 @@ $(document).ready(function(){
 		            	var selectTeam=$('#select_team');
 		            	selectTeam.empty();
 		            	$.each(dataObj, function(index, value) {
-		            		selectTeam.append("<option value='"+value.id+"'>"+value.name+"</option>");
+		            		selectTeam.append("<option value='"+value.tid+"' appointmentid='"+value.id+"'>"+value.name+"</option>");
 		            	});
 		            	selectTeam.attr("disabled",false);
 	            	}
@@ -158,12 +159,12 @@ $(document).ready(function(){
 	
 	
 	/**加载顾问*/
-	function loadConsultant(timeid){
-		if(timeid!=""){
+	function loadConsultant(shopid,timeid){
+		if(timeid!=""&&timeid!="other"&&shopid!=""&&shopid!="other"){
 			$.ajax({
 	             type: "GET",
 	             url: "/reserve/getConsultant.do",
-	             data: {timeid:timeid},
+	             data: {shopid:shopid,timeid:timeid},
 	             dataType: "json",
 	             success: function(data){
 	            	var dataObj=eval(data);
@@ -181,6 +182,7 @@ $(document).ready(function(){
 		}
 	
 	$("#create").on("click",function(){
+		var openid=$("#openid").val();
 		var carid=$("#select_car").val();
 		var isOther=false;
 		var otherCarNum=$("#other_car_num").val();
@@ -209,6 +211,7 @@ $(document).ready(function(){
 			$("#result").text("");
 		}
 		var teamid=$("#select_team").val();
+		var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
 		if(teamid==-1){
 			$("#result").text("请选择班组");
 			return;
@@ -226,12 +229,13 @@ $(document).ready(function(){
 		$.ajax({
             type: "POST",
             url: "/reserve/create.do",
-            data: {carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
+            data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
             dataType: "json",
             success: function(data){
            		var dataObj=eval(data);
            		console.log(dataObj.code);
            		console.log(dataObj.msg);
+           		$("#result").text(dataObj.msg);
             }
         	});
 		

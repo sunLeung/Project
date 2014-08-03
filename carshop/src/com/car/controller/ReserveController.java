@@ -60,14 +60,16 @@ public class ReserveController {
 		return selectTime;
 	}
 	@RequestMapping(value = "/getConsultant")
-	public @ResponseBody List<Map<String,String>> getConsultant(@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
+	public @ResponseBody List<Map<String,String>> getConsultant(@RequestParam(value = "shopid", required = true) String shopid,@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
 		//获取车辆数据
-		List<Map<String,String>> selectTime=getService().getConsultant(timeid);
+		List<Map<String,String>> selectTime=getService().getConsultant(shopid,timeid);
 		return selectTime;
 	}
 	
 	@RequestMapping(value = "/create")
 	public @ResponseBody Map<String, String> create(
+			@RequestParam(value = "openid", required = true) String openid,
+			@RequestParam(value = "appointmentid", required = true) String appointmentid,
 			@RequestParam(value = "carid", required = true) String carid,
 			@RequestParam(value = "isOther", required = true) boolean isOther,
 			@RequestParam(value = "otherCarNum", required = true) String otherCarNum,
@@ -76,6 +78,8 @@ public class ReserveController {
 			@RequestParam(value = "teamid", required = true) String teamid,
 			@RequestParam(value = "consultantid", required = true) String consultantid,
 			ModelMap model) {
+		System.out.println("openid:"+openid);
+		System.out.println("appointmentid:"+appointmentid);
 		System.out.println("carid:"+carid);
 		System.out.println("isOther:"+isOther);
 		System.out.println("otherCarNum:"+otherCarNum);
@@ -83,11 +87,30 @@ public class ReserveController {
 		System.out.println("timeid:"+timeid);
 		System.out.println("teamid:"+teamid);
 		System.out.println("consultantid:"+consultantid);
-		
-		
+		return this.getService().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin, timeid, teamid, consultantid);
+	}
+	
+	@RequestMapping(value = "/query")
+	public String query(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
+		String uid=UserUtils.getUserIdByOpenId(openid);
+		System.out.println(openid);
+		List<Map<String,Object>> list=this.getService().queryAppointment(openid);
+		model.addAttribute("myappointment", list);
+		model.addAttribute("openid", openid);
+		return viewFolder.concat("query");
+	}
+	
+	@RequestMapping(value = "/delete")
+	public @ResponseBody Map<String, String> delete(
+			@RequestParam(value = "aid", required = true) String aid,
+			ModelMap model) {
 		Map<String,String> result=new HashMap<String, String>();
-		result.put("code", "1");
-		result.put("msg", "success");
+		int r=this.getService().deleteAppointment(aid);
+		if(r==1){
+			result.put("code", "1");
+		}else{
+			result.put("code", "0");
+		}
 		return result;
 	}
 }

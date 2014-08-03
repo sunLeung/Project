@@ -1,5 +1,5 @@
 DROP TABLE vehicle;
-CREATE TABLE appointment_team (
+CREATE TABLE vehicle (
   id char(32) NOT NULL,
   register_no VARCHAR2(20) DEFAULT NULL,
   model VARCHAR2(30) DEFAULT NULL,
