@@ -1,6 +1,5 @@
 package com.car.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class ReserveController {
 		String uid=UserUtils.getUserIdByOpenId(openid);
 		System.out.println(openid);
 		//获取车辆数据
-		List<Map<String,String>> mycar=getService().getMyCar(uid);
+		List<Map<String,Object>> mycar=getService().getMyCar(uid);
 		//获取4s店数据
 		List<Map<String,String>> shop=getService().getShop(uid);
 		model.addAttribute("openid", openid);
@@ -55,9 +54,9 @@ public class ReserveController {
 	}
 	
 	@RequestMapping(value = "/getTeam")
-	public @ResponseBody List<Map<String,String>> getTeam(@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
+	public @ResponseBody List<Map<String,String>> getTeam(@RequestParam(value = "shopid", required = true) String shopid,@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
 		//获取车辆数据
-		List<Map<String,String>> selectTime=getService().getTeam(timeid);
+		List<Map<String,String>> selectTime=getService().getTeam(shopid,timeid);
 		return selectTime;
 	}
 	@RequestMapping(value = "/getConsultant")

@@ -18,7 +18,7 @@
 				<c:if test="${!empty mycar}" >
 				<optgroup label="我的车型">
 					<c:forEach var="item" items="${mycar}" varStatus="status"> 
-						<option value="${item.id}">${item.name }&nbsp;${item.num }</option>
+						<option value="${item.id}">${item.model }&nbsp;${item.register_no }</option>
 					</c:forEach>
 					<option value="other">手动输入</option>
 				</optgroup>
@@ -98,6 +98,12 @@ $(document).ready(function(){
 		loadSelectTime(val);
 	});
 	
+	$("#select_time").on("change",function(){
+		var val=$(this).val();
+		var shopid=$("#select_shop").val();
+		loadTeam(shopid,val);
+	});
+	
 	/**加载预约时间*/
 	function loadSelectTime(shopid){
 		if(shopid!=""){
@@ -118,8 +124,9 @@ $(document).ready(function(){
 	            	}
 	            	
 	            	var timeid=$("#select_time").val();
+	            	var shopid=$("#select_shop").val();
 	            	//加载班组和顾问
-	            	loadTeam(timeid);
+	            	loadTeam(shopid,timeid);
 	            	loadConsultant(timeid);
 	             }
 	         	});
@@ -127,12 +134,12 @@ $(document).ready(function(){
 		}
 	
 	/**加载班组*/
-	function loadTeam(timeid){
+	function loadTeam(shopid,timeid){
 		if(timeid!=""){
 			$.ajax({
 	             type: "GET",
 	             url: "/reserve/getTeam.do",
-	             data: {timeid:timeid},
+	             data: {shopid:shopid,timeid:timeid},
 	             dataType: "json",
 	             success: function(data){
 	            	var dataObj=eval(data);
