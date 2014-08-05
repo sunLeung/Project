@@ -192,4 +192,13 @@ public class ReserveService {
 	public int deleteAppointment(String aid){
 		return this.getDAO().deleteAppointment(aid);
 	}
+	
+	public List<Map<String,Object>> rateAppointment(String openid){
+		String uid=UserUtils.getUserIdByOpenId(openid);
+		return this.getDAO().getOvertimeAppointment(uid);
+	}
+	public int ratingAppointment(String openid,String aid,int tscore,int cscore){
+		String uid=UserUtils.getUserIdByOpenId(openid);
+		return this.getDAO().ratingAppointment(uid,aid,tscore,cscore);
+	}
 }

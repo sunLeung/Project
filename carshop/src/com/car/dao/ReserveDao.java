@@ -252,4 +252,21 @@ public class ReserveDao {
 		String sql="update appointment_detail set status=? where id=?";
 		return this.jdbcTemplate.update(sql,2,aid);
 	}
+	
+	public List<Map<String,Object>> getOvertimeAppointment(String uid){
+		String sql="select * from appointment_detail where status=1 and client_id='"+uid+"' and appointment_day<?";
+		return this.jdbcTemplate.queryForList(sql,new Date());
+	}
+	
+	public int ratingAppointment(String uid,String aid, int tscore, int cscore){
+		String sql="update appointment_detail set status=? where id=?";
+		String sql1="insert into appointment_rating(id,appointment_detail_id,team_grade,consultant_grade,client_id) values(?,?,?,?,?)";
+		String id=UUID.randomUUID().toString().replace("-", "");
+		int i= this.jdbcTemplate.update(sql1,id,aid,tscore,cscore,uid);
+		int result=0;
+		if(i==1){
+			result=this.jdbcTemplate.update(sql,3,aid);
+		}
+		return result;
+	}
 }

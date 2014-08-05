@@ -31,7 +31,7 @@ public class ReserveController {
 	}
 	
 	
-	@RequestMapping(value = "/reserveIndex")
+	@RequestMapping(value = "/create")
 	public String index(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
 		String uid=UserUtils.getUserIdByOpenId(openid);
 		System.out.println(openid);
@@ -66,7 +66,7 @@ public class ReserveController {
 		return selectTime;
 	}
 	
-	@RequestMapping(value = "/create")
+	@RequestMapping(value = "/save")
 	public @ResponseBody Map<String, String> create(
 			@RequestParam(value = "openid", required = true) String openid,
 			@RequestParam(value = "appointmentid", required = true) String appointmentid,
@@ -92,7 +92,6 @@ public class ReserveController {
 	
 	@RequestMapping(value = "/query")
 	public String query(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
-		String uid=UserUtils.getUserIdByOpenId(openid);
 		System.out.println(openid);
 		List<Map<String,Object>> list=this.getService().queryAppointment(openid);
 		model.addAttribute("myappointment", list);
@@ -106,6 +105,32 @@ public class ReserveController {
 			ModelMap model) {
 		Map<String,String> result=new HashMap<String, String>();
 		int r=this.getService().deleteAppointment(aid);
+		if(r==1){
+			result.put("code", "1");
+		}else{
+			result.put("code", "0");
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/rate")
+	public String rate(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
+		System.out.println(openid);
+		List<Map<String,Object>> list=this.getService().rateAppointment(openid);
+		model.addAttribute("overtimeAppointment", list);
+		model.addAttribute("openid", openid);
+		return viewFolder.concat("rate");
+	}
+	
+	@RequestMapping(value = "/rating")
+	public @ResponseBody Map<String, String> rating(
+			@RequestParam(value = "openid", required = true) String openid,
+			@RequestParam(value = "aid", required = true) String aid,
+			@RequestParam(value = "tscore", required = true) int tscore,
+			@RequestParam(value = "cscore", required = true) int cscore,
+			ModelMap model) {
+		Map<String,String> result=new HashMap<String, String>();
+		int r=this.getService().ratingAppointment(openid,aid,tscore,cscore);
 		if(r==1){
 			result.put("code", "1");
 		}else{

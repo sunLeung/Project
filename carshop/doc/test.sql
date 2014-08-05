@@ -39,11 +39,11 @@ CREATE TABLE appointment_consultant (
   modiry_time DATE DEFAULT NULL
 );
 
-insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','shop01','shop01����A');
-insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','shop01','shop01����B');
-insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','shop01','shop01����C');
-insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','shop02','shop02����A');
-insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02����B');
+insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','shop01','shop01顾问A');
+insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','shop01','shop01顾问B');
+insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','shop01','shop01顾问C');
+insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','shop02','shop02顾问A');
+insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02顾问B');
 select * from appointment_consultant;
 
 CREATE TABLE appointment_team_capacity_cfg (
@@ -124,3 +124,20 @@ CREATE TABLE appointment_rating (
   consultant_grade INTEGER DEFAULT NULL,
   client_id char(32) DEFAULT NULL
 );
+
+CREATE TABLE maketing_event (
+  id char(32) NOT NULL,
+  branch_id char(32) DEFAULT NULL,
+  name char(32) DEFAULT NULL,
+  signup_from DATE DEFAULT NULL,
+  signup_to DATE DEFAULT NULL,
+  d varchar2(128) DEFAULT NULL,
+  has_picture INTEGER DEFAULT NULL,
+  operate_user char(32) DEFAULT NULL,
+  audit_user char(32) DEFAULT NULL,
+  create_time DATE DEFAULT NULL,
+  modiry_time DATE DEFAULT NULL,
+  audit_time DATE DEFAULT NULL
+);
+
+insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','shop01','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');

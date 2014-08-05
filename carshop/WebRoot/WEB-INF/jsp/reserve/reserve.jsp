@@ -5,6 +5,11 @@
 <head>
 <title></title>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="/lib/bootstrap-3.2.0-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/main.css">
+
 </head>
 <body>
 <!-- 全局保存openid -->
@@ -62,11 +67,19 @@
 		</div>
 		<div><input id="create" type="submit" value="预约"/><span id="result"></span></div>
 </div>
+
+<div class="btn-group" style="width: 100%;position: fixed;bottom: 0px;left:1px;right:0px;">
+  <a href="/reserve/create.do?openid=${openid}" class="btn btn-default">新建预约</a>
+  <a href="/reserve/query.do?openid=${openid}" class="btn btn-default">查询预约</a>
+  <a href="/reserve/rate.do?openid=${openid}" class="btn btn-default">服务评价</a>
+</div>
+</body>
 </body>
 
 <!-- scripts -->
 <script src="/lib/jquery/jquery-2.1.1.min.js"></script>
-
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="/lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
 	//手动输入车型是否显示
@@ -228,7 +241,7 @@ $(document).ready(function(){
 		
 		$.ajax({
             type: "POST",
-            url: "/reserve/create.do",
+            url: "/reserve/save.do",
             data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
             dataType: "json",
             success: function(data){

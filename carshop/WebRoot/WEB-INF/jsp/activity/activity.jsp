@@ -13,38 +13,27 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<!-- 查询预约 -->
-<c:if test="${!empty myappointment}">
-<table class="table">
-	<thead>
-	<tr>
-		<th>预约ID</th>
-		<th>预约时间</th>
-		<th>车牌</th>
-		<th>车架号</th>
-		<th>操作</th>
-	</tr>
-	</thead>
-	<c:forEach var="item" items="${myappointment}" varStatus="status"> 
-		<tr>
-			<td>${item.id}</td>
-			<td>${item.appointment_day}</td>
-			<td>${item.register_no}</td>
-			<td>${item.vin}</td>
-			<td><button class="btn btn-default" name="delete" aid="${item.id}">取消</button></td>
-		</tr>
+<c:if test="${!empty acts}">
+	<ul>
+	<c:forEach var="item" items="${acts}" varStatus="status"> 
+		<li>
+		<div>${item.name }</div><div>活动时间：${item.signup_from }-${item.signup_to }</div><div>${item.description }</div>
+		<div>
+			<c:if test="${!item.isjoin}">
+			<button name="join" class="btn btn-default" actid="${item.id }">参与</button>
+			</c:if>
+			<c:if test="${item.isjoin}">
+			<button disabled class="btn btn-default" actid="${item.id }">已参与</button>
+			</c:if>
+		</div>
+		</li>		
 	</c:forEach>
-</table>
+	</ul>
 </c:if>
-<c:if test="${empty myappointment}">
-	<span>没有预约信息</span>
+<c:if test="${empty acts}">
+	<span>没有活动信息</span>
 </c:if>
 
-<div class="btn-group" style="width: 100%;position: fixed;bottom: 0px;left:1px;right:0px;">
-  <a href="/reserve/create.do?openid=${openid}" class="btn btn-default">新建预约</a>
-  <a href="/reserve/query.do?openid=${openid}" class="btn btn-default">查询预约</a>
-  <a href="/reserve/rate.do?openid=${openid}" class="btn btn-default">服务评价</a>
-</div>
 </body>
 
 <!-- scripts -->
@@ -53,19 +42,19 @@
 <script src="/lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
-	$("button[name='delete']").on("click",function(){
-		var aid=$(this).attr("aid");
+	$("button[name='join']").on("click",function(){
+		var actid=$(this).attr("actid");
+		var openid=$("#openid").val();
 		$.ajax({
             type: "GET",
-            url: "/reserve/delete.do",
-            data: {aid:aid},
+            url: "/activity/join.do",
+            data: {openid:openid,actid:actid},
             dataType: "json",
             success: function(data){
            		var dataObj=eval(data);
            		console.log(dataObj.code);
            		if(dataObj.code==1){
            			location.reload();
-           			console.log("remove");
            		}
             }
         	});

@@ -11,4 +11,8 @@ public class UserUtils {
 	public static String getUserIdByOpenId(String openid){
 		return openid;
 	}
+	
+	public static String getUserShopid(String userid){
+		return "shop01";
+	}
 }

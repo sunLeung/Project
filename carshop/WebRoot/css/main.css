@@ -1,0 +1,6 @@
+.btn-group>.btn{
+	border-radius: 0;
+	width: 33.3%;
+	height: 50px;
+	line-height: 38px;
+}
