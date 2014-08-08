@@ -13,24 +13,24 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<c:if test="${!empty acts}">
+<c:if test="${!empty events}">
 	<ul>
-	<c:forEach var="item" items="${acts}" varStatus="status"> 
+	<c:forEach var="item" items="${events}" varStatus="status"> 
 		<li>
 		<div>${item.name }</div><div>活动时间：${item.signup_from }-${item.signup_to }</div><div>${item.description }</div>
 		<div>
 			<c:if test="${!item.isjoin}">
-			<button name="join" class="btn btn-default" actid="${item.id }">参与</button>
+			<button name="join" class="btn btn-default" eventid="${item.id }">参与</button>
 			</c:if>
 			<c:if test="${item.isjoin}">
-			<button disabled class="btn btn-default" actid="${item.id }">已参与</button>
+			<button disabled class="btn btn-default" eventid="${item.id }">已参与</button>
 			</c:if>
 		</div>
-		</li>		
+		</li>
 	</c:forEach>
 	</ul>
 </c:if>
-<c:if test="${empty acts}">
+<c:if test="${empty events}">
 	<span>没有活动信息</span>
 </c:if>
 
@@ -38,17 +38,18 @@
 
 <!-- scripts -->
 <script src="/lib/jquery/jquery-2.1.1.min.js"></script>
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="/lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
+	
+	//参与活动
 	$("button[name='join']").on("click",function(){
-		var actid=$(this).attr("actid");
+		var eventid=$(this).attr("eventid");
 		var openid=$("#openid").val();
 		$.ajax({
             type: "GET",
-            url: "/activity/join.do",
-            data: {openid:openid,actid:actid},
+            url: "/event/join.do",
+            data: {openid:openid,eventid:eventid},
             dataType: "json",
             success: function(data){
            		var dataObj=eval(data);

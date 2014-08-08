@@ -15,7 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.car.dao.ReserveDao;
-import com.car.utils.UserUtils;
+import com.car.utils.Utils;
 
 @Service
 public class ReserveService {
@@ -185,7 +185,7 @@ public class ReserveService {
 	 * @return
 	 */
 	public List<Map<String,Object>> queryAppointment(String openid){
-		String uid=UserUtils.getUserIdByOpenId(openid);
+		String uid=Utils.getClientidByOpenid(openid);
 		return this.getDAO().getAppointment(uid);
 	}
 	
@@ -194,11 +194,11 @@ public class ReserveService {
 	}
 	
 	public List<Map<String,Object>> rateAppointment(String openid){
-		String uid=UserUtils.getUserIdByOpenId(openid);
+		String uid=Utils.getClientidByOpenid(openid);
 		return this.getDAO().getOvertimeAppointment(uid);
 	}
 	public int ratingAppointment(String openid,String aid,int tscore,int cscore){
-		String uid=UserUtils.getUserIdByOpenId(openid);
+		String uid=Utils.getClientidByOpenid(openid);
 		return this.getDAO().ratingAppointment(uid,aid,tscore,cscore);
 	}
 }

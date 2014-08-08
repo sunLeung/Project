@@ -8,7 +8,7 @@ CREATE TABLE vehicle (
 );
 
 insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','粤AMe168','大众高尔夫','liangyx');
-
+DROP TABLE appointment_team;
 CREATE TABLE appointment_team (
   id char(32) NOT NULL,
   branch_id char(32) DEFAULT NULL,
@@ -46,6 +46,7 @@ insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed481
 insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02顾问B');
 select * from appointment_consultant;
 
+DROP TABLE appointment_team_capacity_cfg;
 CREATE TABLE appointment_team_capacity_cfg (
   id char(32) NOT NULL,
   team_id char(32) DEFAULT NULL,
@@ -64,6 +65,7 @@ insert into appointment_team_capacity_cfg(id,team_id,start_mins_of_day,end_mins_
 insert into appointment_team_capacity_cfg(id,team_id,start_mins_of_day,end_mins_of_day,capacity) values('648e22e989d84462a39a4702ad9d1a79','e4b7ce69877647479e1b29f3d057c3e7',720,780,1);
 select * from appointment_team_capacity_cfg;
 
+DROP TABLE appointment_team_dayoff;
 CREATE TABLE appointment_team_dayoff (
   id char(32) NOT NULL,
   team_id char(32) DEFAULT NULL,
@@ -76,6 +78,7 @@ CREATE TABLE appointment_team_dayoff (
 insert into appointment_team_dayoff(id,team_id,dayoff_date) values('b074409379da4546b8a33f37e8f90e2c','6576aaca316c464480a58d1d297f1b73',to_date('2014-08-03','yyyy-mm-dd'));
 select * from appointment_team_dayoff;
 
+DROP TABLE appointment_consultant_dayoff;
 CREATE TABLE appointment_consultant_dayoff (
   id char(32) NOT NULL,
   consultant_id char(32) DEFAULT NULL,
@@ -87,6 +90,7 @@ CREATE TABLE appointment_consultant_dayoff (
 insert into appointment_consultant_dayoff(id,consultant_id,dayoff_date) values('0b607f9eb59d4d29935cc5c80b321ab5','8f066ce862334f56b7af7267883e1f13',to_date('2014-08-03','yyyy-mm-dd'));
 select * from appointment_consultant_dayoff;
 
+DROP TABLE appointment_team_remains;
 CREATE TABLE appointment_team_remains (
   id char(32) NOT NULL,
   team_id char(32) DEFAULT NULL,
@@ -96,6 +100,7 @@ CREATE TABLE appointment_team_remains (
   remains INTEGER DEFAULT NULL
 );
 
+DROP TABLE appointment_detail;
 CREATE TABLE appointment_detail (
   id char(32) NOT NULL,
   team_id char(32) DEFAULT NULL,
@@ -106,6 +111,7 @@ CREATE TABLE appointment_detail (
   status INTEGER DEFAULT NULL
 );
 
+DROP TABLE appointment_detail;
 CREATE TABLE appointment_detail (
   id char(32) NOT NULL,
   team_id char(32) DEFAULT NULL,
@@ -117,6 +123,7 @@ CREATE TABLE appointment_detail (
   status INTEGER DEFAULT NULL
 );
 
+DROP TABLE appointment_rating;
 CREATE TABLE appointment_rating (
   id char(32) NOT NULL,
   appointment_detail_id char(32) DEFAULT NULL,
@@ -125,13 +132,14 @@ CREATE TABLE appointment_rating (
   client_id char(32) DEFAULT NULL
 );
 
+DROP TABLE maketing_event;
 CREATE TABLE maketing_event (
   id char(32) NOT NULL,
   branch_id char(32) DEFAULT NULL,
   name char(32) DEFAULT NULL,
   signup_from DATE DEFAULT NULL,
   signup_to DATE DEFAULT NULL,
-  d varchar2(128) DEFAULT NULL,
+  description varchar2(128) DEFAULT NULL,
   has_picture INTEGER DEFAULT NULL,
   operate_user char(32) DEFAULT NULL,
   audit_user char(32) DEFAULT NULL,
@@ -139,5 +147,5 @@ CREATE TABLE maketing_event (
   modiry_time DATE DEFAULT NULL,
   audit_time DATE DEFAULT NULL
 );
-
-insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','shop01','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','f340562657e64e4099695c4b865017dd','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','f340562657e64e4099695c4b865017dd','活动2',to_date('2014-08-09','yyyy-mm-dd'),to_date('2014-08-10','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');

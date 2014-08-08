@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.car.service.ReserveService;
-import com.car.utils.UserUtils;
+import com.car.utils.Utils;
 
 @Controller
 @RequestMapping(value = "/reserve")
@@ -33,7 +33,7 @@ public class ReserveController {
 	
 	@RequestMapping(value = "/create")
 	public String index(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
-		String uid=UserUtils.getUserIdByOpenId(openid);
+		String uid=Utils.getClientidByOpenid(openid);
 		System.out.println(openid);
 		//获取车辆数据
 		List<Map<String,Object>> mycar=getService().getMyCar(uid);

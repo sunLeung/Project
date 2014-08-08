@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.car.utils.DateUtils;
-import com.car.utils.UserUtils;
+import com.car.utils.Utils;
 
 @Repository
 public class ReserveDao {
@@ -228,7 +228,7 @@ public class ReserveDao {
 			
 			String insertAppointment="insert into appointment_detail(id,team_id,consultant_id,client_id,appointment_day,vin,register_no,status) values(?,?,?,?,?,?,?,?)";
 			String id=UUID.randomUUID().toString().replace("-", "");
-			String clientid=UserUtils.getUserIdByOpenId(openid);
+			String clientid=Utils.getClientidByOpenid(openid);
 			int r=this.jdbcTemplate.update(insertAppointment,id,teamid,consultantid,clientid,d,otherCarVin,otherCarNum,1);
 			if(r>0){
 				String updateRemains="update appointment_team_remains set remains=? where id=?";
