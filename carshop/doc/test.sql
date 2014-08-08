@@ -6,8 +6,9 @@ CREATE TABLE vehicle (
   model VARCHAR2(30) DEFAULT NULL,
   member_id VARCHAR2(30) DEFAULT NULL
 );
-
 insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','粤AMe168','大众高尔夫','liangyx');
+
+
 DROP TABLE appointment_team;
 CREATE TABLE appointment_team (
   id char(32) NOT NULL,
@@ -19,13 +20,11 @@ CREATE TABLE appointment_team (
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-
-insert into appointment_team(id,branch_id,name) values('747fe9c1c0bd4d37b1887fea7f240e4e','shop01','shop01TeamA');
-insert into appointment_team(id,branch_id,name) values('6576aaca316c464480a58d1d297f1b73','shop01','shop01TeamB');
-insert into appointment_team(id,branch_id,name) values('4cbb22957ca94c60ae29b09c152ba6ca','shop01','shop01TeamC');
-insert into appointment_team(id,branch_id,name) values('4b82cac951e74166ac89530df3c53d74','shop02','shop02TeamA');
-insert into appointment_team(id,branch_id,name) values('e4b7ce69877647479e1b29f3d057c3e7','shop02','shop02TeamB');
-
+insert into appointment_team(id,branch_id,name) values('747fe9c1c0bd4d37b1887fea7f240e4e','f340562657e64e4099695c4b865017dd','shop01TeamA');
+insert into appointment_team(id,branch_id,name) values('6576aaca316c464480a58d1d297f1b73','f340562657e64e4099695c4b865017dd','shop01TeamB');
+insert into appointment_team(id,branch_id,name) values('4cbb22957ca94c60ae29b09c152ba6ca','f340562657e64e4099695c4b865017dd','shop01TeamC');
+insert into appointment_team(id,branch_id,name) values('4b82cac951e74166ac89530df3c53d74','45196726607940129ebf9b7dbf46ebd7','shop02TeamA');
+insert into appointment_team(id,branch_id,name) values('e4b7ce69877647479e1b29f3d057c3e7','45196726607940129ebf9b7dbf46ebd7','shop02TeamB');
 select * from appointment_team;
 
 DROP TABLE appointment_consultant;
@@ -38,12 +37,11 @@ CREATE TABLE appointment_consultant (
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-
-insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','shop01','shop01顾问A');
-insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','shop01','shop01顾问B');
-insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','shop01','shop01顾问C');
-insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','shop02','shop02顾问A');
-insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','shop02','shop02顾问B');
+insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','f340562657e64e4099695c4b865017dd','shop01顾问A');
+insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','f340562657e64e4099695c4b865017dd','shop01顾问B');
+insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','f340562657e64e4099695c4b865017dd','shop01顾问C');
+insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','45196726607940129ebf9b7dbf46ebd7','shop02顾问A');
+insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','45196726607940129ebf9b7dbf46ebd7','shop02顾问B');
 select * from appointment_consultant;
 
 DROP TABLE appointment_team_capacity_cfg;
@@ -57,7 +55,6 @@ CREATE TABLE appointment_team_capacity_cfg (
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-
 insert into appointment_team_capacity_cfg(id,team_id,start_mins_of_day,end_mins_of_day,capacity) values('391fc8dd802940bb8cc44a02f6ab1b06','747fe9c1c0bd4d37b1887fea7f240e4e',540,600,2);
 insert into appointment_team_capacity_cfg(id,team_id,start_mins_of_day,end_mins_of_day,capacity) values('e2122897d49a4e5685976989c3745211','6576aaca316c464480a58d1d297f1b73',540,600,2);
 insert into appointment_team_capacity_cfg(id,team_id,start_mins_of_day,end_mins_of_day,capacity) values('6b72b066d8cc46ea8505813139214f20','4cbb22957ca94c60ae29b09c152ba6ca',600,660,1);
@@ -74,7 +71,6 @@ CREATE TABLE appointment_team_dayoff (
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-
 insert into appointment_team_dayoff(id,team_id,dayoff_date) values('b074409379da4546b8a33f37e8f90e2c','6576aaca316c464480a58d1d297f1b73',to_date('2014-08-03','yyyy-mm-dd'));
 select * from appointment_team_dayoff;
 

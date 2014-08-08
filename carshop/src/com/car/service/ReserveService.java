@@ -11,8 +11,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.car.dao.ReserveDao;
 import com.car.utils.Utils;
@@ -29,25 +27,28 @@ public class ReserveService {
 	
 	/**
 	 * 获取用户自己的车辆数据
-	 * @param uid
+	 * @param clientid
 	 * @return
 	 */
-	public List<Map<String,Object>> getMyCar(String uid){
-		List<Map<String,Object>> result=getDAO().getOwnCar(uid);
+	public List<Map<String,Object>> getClientCarsInfo(String clientid){
+		List<Map<String,Object>> result=getDAO().getClientCar(clientid);
 		return result;
 	}
 	
 	/**
 	 * 获取4s店数据
+	 * @param clientid
 	 * @return
 	 */
-	public List<Map<String,String>> getShop(String uid){
+	public List<Map<String,String>> getShopsInfo(String clientid){
+		//模拟数据
+		
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		Map<String,String> map=new HashMap<String, String>();
-		map.put("id", "shop01");
+		map.put("id", "f340562657e64e4099695c4b865017dd");
 		map.put("name", "天河店");
 		Map<String,String> map1=new HashMap<String, String>();
-		map1.put("id", "shop02");
+		map1.put("id", "45196726607940129ebf9b7dbf46ebd7");
 		map1.put("name", "番禺店");
 		result.add(map);
 		result.add(map1);
@@ -59,22 +60,22 @@ public class ReserveService {
 	 * @param shopid
 	 * @return
 	 */
-	public List<Map<String,String>> getSelectTime(String shopid){
-		List<Map<String,Object>> teamids= this.getDAO().getShopTeam(shopid);
-		//取出这间店的所以班组id
-		List<String> filterTeamis=new ArrayList<String>();
-		for(Map<String,Object> map:teamids){
-			String id=(String)map.get("id");
-			filterTeamis.add(id);
-		}
+	public List<Map<String,String>> getAppointmentTimeByShop(String shopid){
+		//获取该4s店所有班组
+		List<String> teamids= this.getDAO().getShopTeam(shopid);
+		
+		//获取可预约时间
 		List<Map<String,Object>> appointmentTime=this.getDAO().getAppointmentTime();
+		
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		//过来重复时间点和4s的班组
 		List<Date> distinct=new ArrayList<Date>();
 		for(Map<String,Object> map:appointmentTime){
 			String tid=(String)map.get("team_id");
 			Date date=(Date)map.get("appointment_start");
-			if(filterTeamis.contains(tid)&&!distinct.contains(date)){
+			if(teamids.contains(tid)&&!distinct.contains(date)){
 				Map<String,String> temp=new HashMap<String, String>();
 				temp.put("id", sdf.format(date));
 				temp.put("time", sdf.format(date));
@@ -91,20 +92,16 @@ public class ReserveService {
 		return result;
 	}
 	
+	
 	/**
-	 * 通过预约时间获取可预约班组
-	 * @param timeid
+	 * 获取4s店的某时间点的可预约班组
+	 * @param shopid
+	 * @param time
 	 * @return
 	 */
-	public List<Map<String,String>> getTeam(String shopid,String time){
-		List<Map<String,Object>> teamids= this.getDAO().getShopTeam(shopid);
-		//取出这间店的所以班组id
-		List<String> filterTeamis=new ArrayList<String>();
-		for(Map<String,Object> map:teamids){
-			String id=(String)map.get("id");
-			filterTeamis.add(id);
-		}
-		
+	public List<Map<String,String>> getTeamByShopAndTime(String shopid,String time){
+		//获取4s店所有班组
+		List<String> teamids= this.getDAO().getShopTeam(shopid);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d = null;
 		try {
@@ -112,13 +109,14 @@ public class ReserveService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		List<Map<String,Object>> temp=this.getDAO().getAppointmentTeam(d);
+		//获取某时刻的可预约班组
+		List<Map<String,Object>> appointmentTeamByTime=this.getDAO().getAppointmentTeam(d);
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
-		for(Map<String,Object> map:temp){
+		for(Map<String,Object> map:appointmentTeamByTime){
 			String id=(String)map.get("id");
 			String team_id=(String)map.get("team_id");
 			String name=(String)map.get("name");
-			if(filterTeamis.contains(team_id)){
+			if(teamids.contains(team_id)){
 				Map<String,String> m=new HashMap<String, String>();
 				m.put("id", id);
 				m.put("tid", team_id);
@@ -137,11 +135,12 @@ public class ReserveService {
 	}
 	
 	/**
-	 * 通过预约时间获取可预约顾问
-	 * @param timeid
+	 * 获取4s店的某时间点的可预约顾问
+	 * @param shopid
+	 * @param time
 	 * @return
 	 */
-	public List<Map<String,String>> getConsultant(String shopid,String time){
+	public List<Map<String,String>> getConsultantByShopAndTime(String shopid,String time){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d = null;
 		try {
@@ -176,7 +175,53 @@ public class ReserveService {
 			String carid, boolean isOther, String otherCarNum,
 			String otherCarVin, String timeid, String teamid,
 			String consultantid) {
-		return this.getDAO().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin, timeid, teamid, consultantid);
+		Map<String,String> result=new HashMap<String, String>();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = null;
+		try {
+			d = sdf.parse(timeid);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		if(d.getTime()<System.currentTimeMillis()){
+			result.put("code", "6");
+			result.put("msg", "预约失败，预约时间已过期。");
+			return result;
+		}
+		if(isOther){
+			if(otherCarNum.length()<=0&&otherCarVin.length()<=0){
+				result.put("code", "2");
+				result.put("msg", "预约失败，手动输入必须填写车牌号或车架号。");
+				return result;
+			}
+		}else{
+			List<Map<String,Object>> carInfo=this.dao.getCarInfo(carid);
+			if(carInfo.size()==0){
+				result.put("code", "3");
+				result.put("msg", "预约失败，没有找到该车信息，请手动填写。");
+				return result;
+			}else{
+				Map<String,Object> car=carInfo.get(0);
+				otherCarNum=(String)car.get("register_no");
+				otherCarVin=(String)car.get("vin");
+			}
+			//再次检查是否还有预约名额
+			int remain=this.dao.getAppointmentRemain(appointmentid);
+			if(remain<=0){
+				result.put("code", "4");
+				result.put("msg", "预约失败，已经没有预约名额。请选择其他预约。");
+				return result;
+			}
+			int r=this.dao.createAppointment(openid, d, appointmentid, carid, isOther, otherCarNum, otherCarVin, timeid, teamid, consultantid);
+			if(r>0){
+				result.put("code", "1");
+				result.put("msg", "预约成功。");
+				return result;
+			}
+		}
+		result.put("code", "5");
+		result.put("msg", "预约失败，很不幸给别人抢先预约了，预约名额已满。");
+		return result;
 	}
 	
 	/**
@@ -186,19 +231,38 @@ public class ReserveService {
 	 */
 	public List<Map<String,Object>> queryAppointment(String openid){
 		String uid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().getAppointment(uid);
+		return this.getDAO().getClientAppointments(uid);
 	}
 	
-	public int deleteAppointment(String aid){
-		return this.getDAO().deleteAppointment(aid);
+	/**
+	 * 取消预约
+	 * @param appointmentid
+	 * @return
+	 */
+	public int deleteAppointment(String appointmentid){
+		return this.getDAO().deleteAppointment(appointmentid);
 	}
 	
-	public List<Map<String,Object>> rateAppointment(String openid){
+	/**
+	 * 获取可评价预约
+	 * @param openid
+	 * @return
+	 */
+	public List<Map<String,Object>> getCanRateAppointment(String openid){
 		String uid=Utils.getClientidByOpenid(openid);
 		return this.getDAO().getOvertimeAppointment(uid);
 	}
-	public int ratingAppointment(String openid,String aid,int tscore,int cscore){
+	
+	/**
+	 * 预约评价打分
+	 * @param openid
+	 * @param appointmentid
+	 * @param tscore
+	 * @param cscore
+	 * @return
+	 */
+	public int ratingAppointment(String openid,String appointmentid,int tscore,int cscore){
 		String uid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().ratingAppointment(uid,aid,tscore,cscore);
+		return this.getDAO().ratingAppointment(uid,appointmentid,tscore,cscore);
 	}
 }

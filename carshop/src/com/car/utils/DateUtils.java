@@ -5,6 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtils {
+	
+	/**
+	 * 获取日期当天x分钟后的时间
+	 * @param date
+	 * @param min
+	 * @return
+	 */
 	public static Date minToDate(Date date,int min){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String sd=sdf.format(date);
@@ -18,6 +25,11 @@ public class DateUtils {
 		return d;
 	}
 	
+	/**
+	 * 获取日期当天开始时间
+	 * @param date
+	 * @return
+	 */
 	public static Date starDate(Date date){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String sd=sdf.format(date);
@@ -30,6 +42,11 @@ public class DateUtils {
 		return d;
 	}
 	
+	/**
+	 * 获取日期当天结束时间
+	 * @param date
+	 * @return
+	 */
 	public static Date endDate(Date date){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String sd=sdf.format(date);
@@ -40,12 +57,5 @@ public class DateUtils {
 			e.printStackTrace();
 		}
 		return d;
-	}
-	
-	public static void main(String[] args) {
-		Date a=minToDate(new Date(),60);
-		Date b=minToDate(new Date(System.currentTimeMillis()+24*60*60*1000),120);
-		int i=(int) ((b.getTime()-a.getTime())/1000/60/60);
-		System.out.println(i);
 	}
 }

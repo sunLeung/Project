@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +18,6 @@ import com.car.utils.Utils;
 @Controller
 @RequestMapping(value = "/reserve")
 public class ReserveController {
-	private static final Logger log = LoggerFactory.getLogger(ReserveController.class);
 	private static final String viewFolder = "reserve/";
 	
 	@Resource(name = "reserveService")
@@ -30,15 +27,13 @@ public class ReserveController {
 		return reserveService;
 	}
 	
-	
 	@RequestMapping(value = "/create")
 	public String index(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
-		String uid=Utils.getClientidByOpenid(openid);
-		System.out.println(openid);
+		String clientid=Utils.getClientidByOpenid(openid);
 		//获取车辆数据
-		List<Map<String,Object>> mycar=getService().getMyCar(uid);
+		List<Map<String,Object>> mycar=getService().getClientCarsInfo(clientid);
 		//获取4s店数据
-		List<Map<String,String>> shop=getService().getShop(uid);
+		List<Map<String,String>> shop=getService().getShopsInfo(clientid);
 		model.addAttribute("openid", openid);
 		model.addAttribute("mycar", mycar);
 		model.addAttribute("shop", shop);
@@ -49,20 +44,20 @@ public class ReserveController {
 	@RequestMapping(value = "/getSelectTime")
 	public @ResponseBody List<Map<String,String>> getSelectTime(@RequestParam(value = "shopid", required = true) String shopid, ModelMap model) {
 		//获取车辆数据
-		List<Map<String,String>> selectTime=getService().getSelectTime(shopid);
+		List<Map<String,String>> selectTime=getService().getAppointmentTimeByShop(shopid);
 		return selectTime;
 	}
 	
 	@RequestMapping(value = "/getTeam")
 	public @ResponseBody List<Map<String,String>> getTeam(@RequestParam(value = "shopid", required = true) String shopid,@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
 		//获取车辆数据
-		List<Map<String,String>> selectTime=getService().getTeam(shopid,timeid);
+		List<Map<String,String>> selectTime=getService().getTeamByShopAndTime(shopid,timeid);
 		return selectTime;
 	}
 	@RequestMapping(value = "/getConsultant")
 	public @ResponseBody List<Map<String,String>> getConsultant(@RequestParam(value = "shopid", required = true) String shopid,@RequestParam(value = "timeid", required = true) String timeid, ModelMap model) {
 		//获取车辆数据
-		List<Map<String,String>> selectTime=getService().getConsultant(shopid,timeid);
+		List<Map<String,String>> selectTime=getService().getConsultantByShopAndTime(shopid,timeid);
 		return selectTime;
 	}
 	
@@ -116,7 +111,7 @@ public class ReserveController {
 	@RequestMapping(value = "/rate")
 	public String rate(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
 		System.out.println(openid);
-		List<Map<String,Object>> list=this.getService().rateAppointment(openid);
+		List<Map<String,Object>> list=this.getService().getCanRateAppointment(openid);
 		model.addAttribute("overtimeAppointment", list);
 		model.addAttribute("openid", openid);
 		return viewFolder.concat("rate");
