@@ -4,9 +4,9 @@ CREATE TABLE vehicle (
   vin VARCHAR2(20) DEFAULT NULL,
   register_no VARCHAR2(20) DEFAULT NULL,
   model VARCHAR2(30) DEFAULT NULL,
-  member_id VARCHAR2(30) DEFAULT NULL
+  member_id char(32) DEFAULT NULL
 );
-insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','粤AMe168','大众高尔夫','liangyx');
+insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','粤AMe168','大众高尔夫','2df9a11c64ac4d63b693f77ab73c852f');
 
 
 DROP TABLE appointment_team;
