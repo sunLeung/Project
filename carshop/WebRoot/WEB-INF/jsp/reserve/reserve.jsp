@@ -14,64 +14,109 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<!-- 创建预约 -->
-<div>
-	<div><span>创建预约</span></div>
+<div class="container-fluid">
+<div class="row">
+	<div class="col-xs-12">
+		<!-- 创建预约 -->
 		<div>
-			<span>选择车型</span>
-			<select id="select_car" name="carid">
-				
-				<optgroup label="我的车型">
-					<c:if test="${!empty mycar}" >
-					<c:forEach var="item" items="${mycar}" varStatus="status"> 
-						<option value="${item.id}">${item.model }&nbsp;${item.register_no }</option>
-					</c:forEach>
-					</c:if>
-					<option value="other">手动输入</option>
-				</optgroup>
-			</select>
-			<span id="other_car" style="display: none;">
-			<label>车牌：</label>
-			<input id="other_car_num" type="text" placeholder="填写车牌号"/>
-			<label>车架号：</label>
-			<input id="other_car_vin" type="text" placeholder="填写车架号"/>
-			<span>*请填写车牌或车架号</span>
-			</span>
+			<h3 style="color:#ee8c28;">新建<small>预约</small></h3>
+			
+			<!-- 选择车 begin-->
+			<div style="margin-bottom: 10px;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">选择车型</span></span>
+	  				<select class="form-control" id="select_car" name="carid">
+	  					<optgroup label="我的车型">
+							<c:if test="${!empty mycar}" >
+							<c:forEach var="item" items="${mycar}" varStatus="status"> 
+								<option value="${item.id}">${item.model }&nbsp;${item.register_no }</option>
+							</c:forEach>
+							</c:if>
+							<option value="other">手动输入</option>
+						</optgroup>
+	  				</select>
+				</div>
+				<div id="other_car" style="display: none;">
+					<div class="input-group" >
+						<span class="input-group-addon"><span class="inputLabel">车牌</span></span>
+						<input class="form-control" id="other_car_num" type="text" placeholder="填写车牌号"/>
+					</div>
+					<div class="input-group" >
+						<span class="input-group-addon"><span class="inputLabel">车架号</span></span>
+						<input class="form-control" id="other_car_vin" type="text" placeholder="填写车架号"/>
+					</div>
+					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
+				</div>
+			</div>
+			<!-- 选择车 end-->
+			
+			<!-- 选择店 begin-->
+			<div style="margin-bottom: 10px;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">选择4s店</span></span>
+	  				<select class="form-control" id="select_shop" name="shopid">
+	  					<c:if test="${empty shop}" >
+							<option value="-1">没有店铺</option>
+						</c:if>
+						<c:forEach var="item" items="${shop}" varStatus="status"> 
+							<option value="${item.id}">${item.name }</option>
+						</c:forEach>
+	  				</select>
+				</div>
+			</div>
+			<!-- 选择店 end-->
+			
+			<!-- 选择时间 begin-->
+			<div style="margin-bottom: 10px;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">预约时间</span></span>
+	  				<select class="form-control" id="select_time" disabled="disabled" name="timeid">
+	  					<option value="-1">请先选择4s店</option>
+	  				</select>
+				</div>
+			</div>
+			<!-- 选择时间 end-->
+			
+			<!-- 选择班组 begin-->
+			<div style="margin-bottom: 10px;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">选择班组</span></span>
+	  				<select class="form-control" id="select_team" disabled="disabled" name="teamid">
+	  					<option value="-1">请先选择预约时间</option>
+	  				</select>
+				</div>
+			</div>
+			<!-- 选择班组 end-->
+			
+			<!-- 选择顾问 begin-->
+			<div style="margin-bottom: 10px;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">选择顾问</span></span>
+	  				<select class="form-control" id="select_consultant" disabled="disabled" name="consultantid">
+	  					<option value="-1">请先选择预约时间</option>
+	  				</select>
+				</div>
+			</div>
+			<!-- 选择顾问 end-->
+			<div class="text-right">
+				<input id="create" type="submit" value="提交预约" class="btn btn-default"/>
+			</div>
 		</div>
-		<div>
-			<span>选择4s店</span>
-			<select id="select_shop" name="shopid">
-				<c:if test="${empty shop}" >
-					<option value="-1">没有店铺</option>
-				</c:if>
-				<c:forEach var="item" items="${shop}" varStatus="status"> 
-					<option value="${item.id}">${item.name }</option>
-				</c:forEach>
-			</select>
-		</div>
-		<div>
-			<span>预约时间</span>
-			<select id="select_time" disabled="disabled" name="timeid">
-				<option value="-1">请选择4s店</option>
-			</select>
-		</div>
-		<div>
-			<span>班组</span>
-			<select id="select_team" disabled="disabled" name="teamid">
-				<option value="-1">请先选择预约时间</option>
-			</select>
-			<span>顾问</span>
-			<select id="select_consultant" disabled="disabled" name="consultantid">
-				<option value="-1">请先选择预约时间</option>
-			</select>
-		</div>
-		<div><input id="create" type="submit" value="预约"/><span id="result"></span></div>
+		<div id="success-result" style="padding: 8px;display: none;" class="alert alert-success" role="alert"></div>
+		<div id="error-result" style="padding: 8px;display: none;" class="alert alert-danger" role="alert">...</div>
+	</div>
+</div>
 </div>
 
-<div class="btn-group" style="width: 100%;position: fixed;bottom: 0px;left:1px;right:0px;">
-  <a href="/reserve/create.do?openid=${openid}" class="btn btn-default">新建预约</a>
-  <a href="/reserve/query.do?openid=${openid}" class="btn btn-default">查询预约</a>
-  <a href="/reserve/rate.do?openid=${openid}" class="btn btn-default">服务评价</a>
+
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;">
+	<div class="row">
+		<div class="btn-group" style="width: 100%;">
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-search" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/query.do?openid=${openid}">查询预约</a></div>
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-pencil" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/rate.do?openid=${openid}">服务评价</a></div>
+	  </div>
+	</div>
 </div>
 </body>
 </body>
@@ -202,41 +247,30 @@ $(document).ready(function(){
 		var otherCarVin=$("#other_car_vin").val();
 		if(carid=="other"){
 			if(otherCarNum==""&&otherCarVin==""){
-				$("#result").text("车牌号和车架号至少填写一个");
+				showResult(0,"车牌号和车架号至少填写一个。");
 				return;
-			}else{
-				$("#result").text("");
-				isOther=true;
 			}
 		}
 		var shopid=$("#select_shop").val();
 		if(shopid==-1){
-			$("#result").text("请选择商店");
+			showResult(0,"请选择商店。");
 			return;
-		}else{
-			$("#result").text("");
 		}
 		var timeid=$("#select_time").val();
 		if(timeid==-1){
-			$("#result").text("请选择预约时间");
+			showResult(0,"请选择预约时间。");
 			return;
-		}else{
-			$("#result").text("");
 		}
 		var teamid=$("#select_team").val();
 		var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
 		if(teamid==-1){
-			$("#result").text("请选择班组");
+			showResult(0,"请选择班组。");
 			return;
-		}else{
-			$("#result").text("");
 		}
 		var consultantid=$("#select_consultant").val();
 		if(consultantid==-1){
-			$("#result").text("请选择顾问");
+			showResult(0,"请选择顾问。");
 			return;
-		}else{
-			$("#result").text("");
 		}
 		
 		$.ajax({
@@ -248,12 +282,27 @@ $(document).ready(function(){
            		var dataObj=eval(data);
            		console.log(dataObj.code);
            		console.log(dataObj.msg);
-           		$("#result").text(dataObj.msg);
+           		showResult(dataObj.code,dataObj.msg);
             }
         	});
 		
 	});
 	
+	function showResult(code,msg){
+		var sr=$("#success-result");
+		var er=$("#error-result");
+		sr.empty();
+		er.empty();
+		sr.hide();
+		er.hide();
+		if(code!=1){
+			er.text(msg);
+			er.show();
+		}else{
+			sr.text(msg);
+			sr.show();
+		}
+	}
 });
 
 </script>

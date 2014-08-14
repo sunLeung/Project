@@ -200,8 +200,8 @@ public class ReserveDao {
 	 * @return
 	 */
 	public List<Map<String,Object>> getClientAppointments(String clientid){
-		String sql="select * from appointment_detail where status=1 and client_id=?";
-		return this.jdbcTemplate.queryForList(sql,clientid);
+		String sql="select * from appointment_detail where status=1 and client_id=? and appointment_day>?";
+		return this.jdbcTemplate.queryForList(sql,clientid,new Date());
 	}
 	
 	/**

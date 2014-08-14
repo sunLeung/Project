@@ -13,37 +13,38 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<!-- 查询预约 -->
-<c:if test="${!empty myappointment}">
-<table class="table">
-	<thead>
-	<tr>
-		<th>预约ID</th>
-		<th>预约时间</th>
-		<th>车牌</th>
-		<th>车架号</th>
-		<th>操作</th>
-	</tr>
-	</thead>
-	<c:forEach var="item" items="${myappointment}" varStatus="status"> 
-		<tr>
-			<td>${item.id}</td>
-			<td>${item.appointment_day}</td>
-			<td>${item.register_no}</td>
-			<td>${item.vin}</td>
-			<td><button class="btn btn-default" name="delete" aid="${item.id}">取消</button></td>
-		</tr>
-	</c:forEach>
-</table>
-</c:if>
-<c:if test="${empty myappointment}">
-	<span>没有预约信息</span>
-</c:if>
+<div class="container-fluid">
+<div class="row">
+	<div class="col-xs-12">
+		<h3 style="color:#ee8c28;">查询<small>预约</small></h3>
+		
+		<!-- 查询预约 -->
+		<c:if test="${!empty myappointment}">
+		<c:forEach var="item" items="${myappointment}" varStatus="status"> 
+		<div class="callout callout-info">
+			<p><label style="margin:0px;">预约ID:</label> ${item.id}</p>
+			<p><label style="margin:0px;">预约时间:</label> ${item.appointment_day}</p>
+			<p><label style="margin:0px;">车牌:</label> ${item.register_no}</p>
+			<p><label style="margin:0px;">车架号:</label> ${item.vin}</p>
+			<p class="text-right"><button class="btn btn-default" name="delete" aid="${item.id}">取消预约</button></p>
+		</div>
+		</c:forEach>
+		</c:if>
+		<c:if test="${empty myappointment}">
+			<span>没有预约信息</span>
+		</c:if>
+	</div>
+</div>
+</div>
 
-<div class="btn-group" style="width: 100%;position: fixed;bottom: 0px;left:1px;right:0px;">
-  <a href="/reserve/create.do?openid=${openid}" class="btn btn-default">新建预约</a>
-  <a href="/reserve/query.do?openid=${openid}" class="btn btn-default">查询预约</a>
-  <a href="/reserve/rate.do?openid=${openid}" class="btn btn-default">服务评价</a>
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;">
+	<div class="row">
+		<div class="btn-group" style="width: 100%;">
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-search" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/query.do?openid=${openid}">查询预约</a></div>
+		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-pencil" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/rate.do?openid=${openid}">服务评价</a></div>
+	  </div>
+	</div>
 </div>
 </body>
 

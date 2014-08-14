@@ -1,6 +1,38 @@
+body{
+	background:#EEE;
+}
 .btn-group>.btn{
 	border-radius: 0;
 	width: 33.3%;
 	height: 50px;
 	line-height: 38px;
+}
+
+.navi_text{
+	font-size: 16px;
+	text-decoration: none;
+	color: #ee8c28;
+	font-weight: bold;
+}
+.navi_text:hover{
+	font-size: 16px;
+	text-decoration: none;
+	color: #ee8c28;
+	font-weight: bold;
+}
+
+.inputLabel{
+	width:82px;
+	display: block;
+}
+
+.callout {
+padding: 5px;
+margin: 10px 0;
+border: 1px solid #ee8c28;
+border-left-width: 5px;
+border-radius: 3px;
+}
+.callout-info {
+border-left-color: #5bc0de;
 }
