@@ -42,7 +42,7 @@ public class ReserveDao {
 	 * @return
 	 */
 	public List<String> getShopTeam(String shopid){
-		String sql = "select id from appointment_team where BRANCH_ID=?";
+		String sql = "select id from appointment_team where own_no=?";
 		return jdbcTemplate.queryForList(sql,String.class,shopid);
 	}
 	
@@ -57,7 +57,7 @@ public class ReserveDao {
 		
 		Date starDate=new Date();
 		Date endDate=DateUtils.endDate(new Date(System.currentTimeMillis()+24*60*60*1000));
-		String sql = "select team_id,appointment_start from appointment_team_remains where remains>0 and appointment_start>=? and appointment_start<=?";
+		String sql = "select team_id,appointment_start,appointment_end from appointment_team_remains where remains>0 and appointment_start>=? and appointment_start<=?";
 		return jdbcTemplate.queryForList(sql,starDate,endDate);
 	}
 	
@@ -123,7 +123,7 @@ public class ReserveDao {
 		List<String> dayoffConsultants=jdbcTemplate.queryForList(selectDayoffConsultantSql,String.class, DateUtils.starDate(date),DateUtils.endDate(date));
 		
 		//获取某4s店的顾问
-		String selectConsultantSql="select id,name from appointment_consultant where branch_id=?";
+		String selectConsultantSql="select id,name from appointment_consultant where own_no=?";
 		List<Map<String,Object>> consultantList=jdbcTemplate.queryForList(selectConsultantSql,shopid);
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		
@@ -146,26 +146,29 @@ public class ReserveDao {
 	/**
 	 * 创建预约
 	 * @param openid
-	 * @param appointmentDate
+	 * @param appointmentStart
+	 * @param appointmentEnd
+	 * @param appointmentid
 	 * @param carid
 	 * @param isOther
 	 * @param otherCarNum
 	 * @param otherCarVin
+	 * @param Shopid
 	 * @param timeid
 	 * @param teamid
 	 * @param consultantid
 	 * @return
 	 */
 	public synchronized int createAppointment(String openid,
-			Date appointmentDate, String appointmentid, String carid,
-			boolean isOther, String otherCarNum, String otherCarVin,
+			Date appointmentStart,Date appointmentEnd, String appointmentid, String carid,
+			boolean isOther, String otherCarNum, String otherCarVin,String Shopid,
 			String timeid, String teamid, String consultantid) {
-		String sql = "insert into appointment_detail(id,team_id,consultant_id,client_id,appointment_day,vin,register_no,status) values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into appointment_detail(id,team_id,consultant_id,client_id,appointment_start,appointment_end,vin,register_no,own_no,status) values(?,?,?,?,?,?,?,?,?,?)";
 		String clientid = Utils.getClientidByOpenid(openid);
 		// 再次检查是否还有预约名额
 		int remain = getAppointmentRemain(appointmentid);
 		if(remain>0){
-			int r = this.jdbcTemplate.update(sql, Utils.createUUID(), teamid,consultantid, clientid, appointmentDate, otherCarVin,otherCarNum, 1);
+			int r = this.jdbcTemplate.update(sql, Utils.createUUID(), teamid,consultantid, clientid, appointmentStart,appointmentEnd, otherCarVin,otherCarNum,Shopid, 1);
 			if (r > 0) {
 				String updateRemains = "update appointment_team_remains set remains=(remains-1) where id=?";
 				return this.jdbcTemplate.update(updateRemains, appointmentid);
@@ -200,7 +203,7 @@ public class ReserveDao {
 	 * @return
 	 */
 	public List<Map<String,Object>> getClientAppointments(String clientid){
-		String sql="select * from appointment_detail where status=1 and client_id=? and appointment_day>?";
+		String sql="select a.id,a.appointment_start,a.appointment_end,a.model,b.address,b.print_title,b.telephone,a.vin,a.register_no from appointment_detail a left join USER_REG_INFO b on a.own_no=b.own_no where a.status=1 and a.client_id=? and a.appointment_start>?";
 		return this.jdbcTemplate.queryForList(sql,clientid,new Date());
 	}
 	
@@ -215,13 +218,13 @@ public class ReserveDao {
 	}
 	
 	/**
-	 * 获取客人的过期预约
+	 * 获取已完成服务的预约
 	 * @param clientid
 	 * @return
 	 */
 	public List<Map<String,Object>> getOvertimeAppointment(String clientid){
-		String sql="select * from appointment_detail where status=1 and client_id=? and appointment_day<?";
-		return this.jdbcTemplate.queryForList(sql,clientid,new Date());
+		String sql="select * from appointment_detail where status=3 and client_id=?";
+		return this.jdbcTemplate.queryForList(sql,clientid);
 	}
 	
 	/**
@@ -238,8 +241,42 @@ public class ReserveDao {
 		int result=0;
 		if(i==1){
 			String updateAppointmentSql="update appointment_detail set status=? where id=?";
-			result=this.jdbcTemplate.update(updateAppointmentSql,3,appointmentid);
+			result=this.jdbcTemplate.update(updateAppointmentSql,4,appointmentid);
 		}
 		return result;
 	}
+	
+	/**
+	 * 获取客户最近一次的预约店铺ID
+	 * @param clientid
+	 * @return
+	 */
+	public String getRecentAppointmentShopid(String clientid){
+		String sql="SELECT own_no FROM (SELECT own_no FROM appointment_detail where client_id=? ORDER BY appointment_start) WHERE ROWNUM <= 1 ORDER BY ROWNUM DESC";
+		List<String> shopid = this.jdbcTemplate.queryForList(sql, String.class,clientid);
+		if(shopid.size()>0){
+			return shopid.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取客户购买车的4s店
+	 * @param openid
+	 * @return
+	 */
+	public List<String> getBuyCarShopid(String openid){
+		String sql="select own_no from wechat_identity_correlation a left join vehicle b on a.vehicle_id=b.id where open_id=?";
+		List<String> shopids = this.jdbcTemplate.queryForList(sql, String.class,openid);
+		return shopids;
+	}
+	
+	/**
+	 * 获取所有4s店
+	 * @return
+	 */
+	public List<Map<String,Object>> getAllShopInfo(){
+		String sql="select own_no,print_title from user_reg_info";
+		return this.jdbcTemplate.queryForList(sql);
+	} 
 }

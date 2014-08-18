@@ -33,7 +33,7 @@ public class ReserveController {
 		//获取车辆数据
 		List<Map<String,Object>> mycar=getService().getClientCarsInfo(clientid);
 		//获取4s店数据
-		List<Map<String,String>> shop=getService().getShopsInfo(clientid);
+		List<Map<String,Object>> shop=getService().getShopsInfo(openid,clientid);
 		model.addAttribute("openid", openid);
 		model.addAttribute("mycar", mycar);
 		model.addAttribute("shop", shop);
@@ -69,6 +69,7 @@ public class ReserveController {
 			@RequestParam(value = "isOther", required = true) boolean isOther,
 			@RequestParam(value = "otherCarNum", required = true) String otherCarNum,
 			@RequestParam(value = "otherCarVin", required = true) String otherCarVin,
+			@RequestParam(value = "shopid", required = true) String shopid,
 			@RequestParam(value = "timeid", required = true) String timeid,
 			@RequestParam(value = "teamid", required = true) String teamid,
 			@RequestParam(value = "consultantid", required = true) String consultantid,
@@ -79,10 +80,11 @@ public class ReserveController {
 		System.out.println("isOther:"+isOther);
 		System.out.println("otherCarNum:"+otherCarNum);
 		System.out.println("otherCarVin:"+otherCarVin);
+		System.out.println("shopid:"+shopid);
 		System.out.println("timeid:"+timeid);
 		System.out.println("teamid:"+teamid);
 		System.out.println("consultantid:"+consultantid);
-		return this.getService().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin, timeid, teamid, consultantid);
+		return this.getService().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin,shopid, timeid, teamid, consultantid);
 	}
 	
 	@RequestMapping(value = "/query")

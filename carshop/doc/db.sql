@@ -81,10 +81,14 @@ CREATE TABLE appointment_detail (
   team_id char(32) DEFAULT NULL,
   consultant_id char(32) DEFAULT NULL,
   client_id char(32) DEFAULT NULL,
-  appointment_day DATE DEFAULT NULL,
   register_no VARCHAR2(20) DEFAULT NULL,
   vin VARCHAR2(20) DEFAULT NULL,
-  status INTEGER DEFAULT NULL
+  status INTEGER DEFAULT NULL,
+  appointment_start DATE DEFAULT NULL,
+  appointment_end DATE DEFAULT NULL,
+  model_code VARCHAR2(20) DEFAULT NULL,
+  model VARCHAR2(20) DEFAULT NULL,
+  branch_id char(32) DEFAULT NULL
 );
 
 
@@ -97,6 +101,38 @@ CREATE TABLE appointment_rating (
   consultant_grade INTEGER DEFAULT NULL,
   client_id char(32) DEFAULT NULL
 );
+
+DROP TABLE wechat_identity_correlation;
+CREATE TABLE wechat_identity_correlation (
+	id char(32) NOT NULL,
+	account_id VARCHAR2(64) DEFAULT NULL,
+	open_id VARCHAR2(64) DEFAULT NULL,
+	client_id CHAR(32) DEFAULT NULL,
+	vehicle_id CHAR(32) DEFAULT NULL,
+	status NUMBER(5) DEFAULT NULL,
+	correlation_time DATE DEFAULT NULL,
+	uncorrelation_time DATE  DEFAULT NULL
+);
+
+DROP TABLE vehicle;
+CREATE TABLE vehicle (
+	id char(32) NOT NULL,
+	vin VARCHAR2(25) DEFAULT NULL,
+	register_no VARCHAR2(20) DEFAULT NULL,
+	factory_code VARCHAR2(20) DEFAULT NULL,
+	factory VARCHAR2(20) DEFAULT NULL,
+	model_code VARCHAR2(20) DEFAULT NULL,
+	model VARCHAR2(30) DEFAULT NULL,
+	member_id VARCHAR2(30) DEFAULT NULL,
+	member_type VARCHAR2(14) DEFAULT NULL,
+	member_reg_name VARCHAR2(8) DEFAULT NULL,
+	member_remark VARCHAR2(60) DEFAULT NULL,
+	branch_id CHAR(32) DEFAULT NULL,
+	member_limit DATE DEFAULT NULL,
+	member_no VARCHAR2(20) DEFAULT NULL
+);
+
+
 
 ---------------------------------活动-------------------------------
 

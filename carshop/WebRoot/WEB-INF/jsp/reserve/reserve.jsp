@@ -14,7 +14,7 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<div class="container-fluid">
+<div class="container-fluid" style="margin-bottom: 55px;">
 <div class="row">
 	<div class="col-xs-12">
 		<!-- 创建预约 -->
@@ -59,7 +59,7 @@
 							<option value="-1">没有店铺</option>
 						</c:if>
 						<c:forEach var="item" items="${shop}" varStatus="status"> 
-							<option value="${item.id}">${item.name }</option>
+							<option value="${item.own_no }">${item.print_title }</option>
 						</c:forEach>
 	  				</select>
 				</div>
@@ -99,7 +99,7 @@
 			</div>
 			<!-- 选择顾问 end-->
 			<div class="text-right">
-				<input id="create" type="submit" value="提交预约" class="btn btn-default"/>
+				<input id="create" type="submit" value="提交预约" data-loading-text="预约中..." class="btn btn-default"/>
 			</div>
 		</div>
 		<div id="success-result" style="padding: 8px;display: none;" class="alert alert-success" role="alert"></div>
@@ -109,7 +109,7 @@
 </div>
 
 
-<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;">
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1000;">
 	<div class="row">
 		<div class="btn-group" style="width: 100%;">
 		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>
@@ -130,9 +130,9 @@ $(document).ready(function(){
 	//手动输入车型是否显示
 	var carSelectVal=$("#select_car").val();
 	if(carSelectVal=="other"){
-		$("#other_car_model").show();
+		$("#other_car").show();
 	}else{
-		$("#other_car_model").hide();
+		$("#other_car").hide();
 	}
 	
 	//加载预约时间
@@ -177,9 +177,14 @@ $(document).ready(function(){
 		            	var selectTime=$('#select_time');
 		            	selectTime.empty();
 		            	$.each(dataObj, function(index, value) {
-		            		selectTime.append("<option value='"+value.id+"'>"+value.time+"</option>");
+		            		selectTime.append("<option value='"+value.id+"'>"+value.begin+" - "+ value.end+"</option>");
 		            	});
-	            		selectTime.attr("disabled",false);
+		            	var other=dataObj[0].id;
+		            	if(other=='other'){
+		            		selectTime.attr("disabled",true);
+		            	}else{
+		            		selectTime.attr("disabled",false);
+		            	}
 	            	}
 	            	
 	            	var timeid=$("#select_time").val();
@@ -212,6 +217,11 @@ $(document).ready(function(){
 	            	}
 	             }
 	         	});
+			}else{
+				var selectTeam=$('#select_team');
+				selectTeam.empty();
+				selectTeam.append("<option value='other' appointmentid='other'>预约已满</option>");
+				selectTeam.attr("disabled",true);
 			}
 		}
 	
@@ -236,10 +246,16 @@ $(document).ready(function(){
 	            	}
 	             }
 	         	});
+			}else{
+				var selectConsultant=$('#select_consultant');
+				selectConsultant.empty();
+				selectConsultant.append("<option value='other'>预约已满</option>");
+				selectConsultant.attr("disabled",true);
 			}
 		}
 	
 	$("#create").on("click",function(){
+		var btn = $(this);
 		var openid=$("#openid").val();
 		var carid=$("#select_car").val();
 		var isOther=false;
@@ -250,10 +266,11 @@ $(document).ready(function(){
 				showResult(0,"车牌号和车架号至少填写一个。");
 				return;
 			}
+			isOther=true;
 		}
 		var shopid=$("#select_shop").val();
 		if(shopid==-1){
-			showResult(0,"请选择商店。");
+			showResult(0,"请选择4S店。");
 			return;
 		}
 		var timeid=$("#select_time").val();
@@ -272,13 +289,14 @@ $(document).ready(function(){
 			showResult(0,"请选择顾问。");
 			return;
 		}
-		
+		btn.button('loading');
 		$.ajax({
             type: "POST",
             url: "/reserve/save.do",
             data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
             dataType: "json",
             success: function(data){
+            	btn.button('reset');
            		var dataObj=eval(data);
            		console.log(dataObj.code);
            		console.log(dataObj.msg);

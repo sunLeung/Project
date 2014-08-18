@@ -14,7 +14,7 @@
 <body>
 <!-- 全局保存openid -->
 <input id="openid" value=${openid} type="hidden"/>
-<div class="container-fluid">
+<div class="container-fluid" style="margin-bottom: 55px;">
 <div class="row">
 	<div class="col-xs-12">
 		<h3 style="color:#ee8c28;">服务<small>评价</small></h3>
@@ -60,7 +60,7 @@
 </div>
 
 
-<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;">
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1000;">
 	<div class="row">
 		<div class="btn-group" style="width: 100%;">
 		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>

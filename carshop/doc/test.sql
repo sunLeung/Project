@@ -1,18 +1,7 @@
-DROP TABLE vehicle;
-CREATE TABLE vehicle (
-  id char(32) NOT NULL,
-  vin VARCHAR2(20) DEFAULT NULL,
-  register_no VARCHAR2(20) DEFAULT NULL,
-  model VARCHAR2(30) DEFAULT NULL,
-  member_id char(32) DEFAULT NULL
-);
-insert into vehicle (id,vin,register_no,model,member_id) values('6450ac24866d4b75a2ddbf1a55c19303','1923791','粤AMe168','大众高尔夫','2df9a11c64ac4d63b693f77ab73c852f');
-
-
 DROP TABLE appointment_team;
 CREATE TABLE appointment_team (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL,
   name varchar(128) DEFAULT NULL,
   description varchar(128) DEFAULT NULL,
   display_order varchar(128) DEFAULT NULL,
@@ -20,28 +9,28 @@ CREATE TABLE appointment_team (
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-insert into appointment_team(id,branch_id,name) values('747fe9c1c0bd4d37b1887fea7f240e4e','f340562657e64e4099695c4b865017dd','shop01TeamA');
-insert into appointment_team(id,branch_id,name) values('6576aaca316c464480a58d1d297f1b73','f340562657e64e4099695c4b865017dd','shop01TeamB');
-insert into appointment_team(id,branch_id,name) values('4cbb22957ca94c60ae29b09c152ba6ca','f340562657e64e4099695c4b865017dd','shop01TeamC');
-insert into appointment_team(id,branch_id,name) values('4b82cac951e74166ac89530df3c53d74','45196726607940129ebf9b7dbf46ebd7','shop02TeamA');
-insert into appointment_team(id,branch_id,name) values('e4b7ce69877647479e1b29f3d057c3e7','45196726607940129ebf9b7dbf46ebd7','shop02TeamB');
+insert into appointment_team(id,own_no,name) values('747fe9c1c0bd4d37b1887fea7f240e4e','115','shop01TeamA');
+insert into appointment_team(id,own_no,name) values('6576aaca316c464480a58d1d297f1b73','115','shop01TeamB');
+insert into appointment_team(id,own_no,name) values('4cbb22957ca94c60ae29b09c152ba6ca','114','shop01TeamC');
+insert into appointment_team(id,own_no,name) values('4b82cac951e74166ac89530df3c53d74','115','shop02TeamA');
+insert into appointment_team(id,own_no,name) values('e4b7ce69877647479e1b29f3d057c3e7','114','shop02TeamB');
 select * from appointment_team;
 
 DROP TABLE appointment_consultant;
 CREATE TABLE appointment_consultant (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL,
   name varchar(128) DEFAULT NULL,
   display_order varchar(128) DEFAULT NULL,
   operate_user char(32) DEFAULT NULL,
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL
 );
-insert into appointment_consultant(id,branch_id,name) values('8f066ce862334f56b7af7267883e1f13','f340562657e64e4099695c4b865017dd','shop01顾问A');
-insert into appointment_consultant(id,branch_id,name) values('483e55e4401b48489eca641a9d68b816','f340562657e64e4099695c4b865017dd','shop01顾问B');
-insert into appointment_consultant(id,branch_id,name) values('09bfe65388c547ad928498fa2bcf0aec','f340562657e64e4099695c4b865017dd','shop01顾问C');
-insert into appointment_consultant(id,branch_id,name) values('84ebdc65b9ca4ed48162dcc713490cb3','45196726607940129ebf9b7dbf46ebd7','shop02顾问A');
-insert into appointment_consultant(id,branch_id,name) values('184c696317234a648fdf09bcc62be4d0','45196726607940129ebf9b7dbf46ebd7','shop02顾问B');
+insert into appointment_consultant(id,own_no,name) values('8f066ce862334f56b7af7267883e1f13','115','shop01顾问A');
+insert into appointment_consultant(id,own_no,name) values('483e55e4401b48489eca641a9d68b816','115','shop01顾问B');
+insert into appointment_consultant(id,own_no,name) values('09bfe65388c547ad928498fa2bcf0aec','114','shop01顾问C');
+insert into appointment_consultant(id,own_no,name) values('84ebdc65b9ca4ed48162dcc713490cb3','115','shop02顾问A');
+insert into appointment_consultant(id,own_no,name) values('184c696317234a648fdf09bcc62be4d0','115','shop02顾问B');
 select * from appointment_consultant;
 
 DROP TABLE appointment_team_capacity_cfg;
@@ -102,21 +91,15 @@ CREATE TABLE appointment_detail (
   team_id char(32) DEFAULT NULL,
   consultant_id char(32) DEFAULT NULL,
   client_id char(32) DEFAULT NULL,
-  appointment_day DATE DEFAULT NULL,
-  register_no VARCHAR2(20) DEFAULT NULL,
-  status INTEGER DEFAULT NULL
-);
-
-DROP TABLE appointment_detail;
-CREATE TABLE appointment_detail (
-  id char(32) NOT NULL,
-  team_id char(32) DEFAULT NULL,
-  consultant_id char(32) DEFAULT NULL,
-  client_id char(32) DEFAULT NULL,
-  appointment_day DATE DEFAULT NULL,
-  register_no VARCHAR2(20) DEFAULT NULL,
   vin VARCHAR2(20) DEFAULT NULL,
-  status INTEGER DEFAULT NULL
+  register_no VARCHAR2(20) DEFAULT NULL,
+  status INTEGER DEFAULT NULL,
+  appointment_start DATE DEFAULT NULL,
+  appointment_end	DATE DEFAULT NULL,
+  model_code VARCHAR2(32) DEFAULT NULL,
+  model VARCHAR2(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL
+
 );
 
 DROP TABLE appointment_rating;
@@ -131,7 +114,7 @@ CREATE TABLE appointment_rating (
 DROP TABLE maketing_event;
 CREATE TABLE maketing_event (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no char(32) DEFAULT NULL,
   name char(32) DEFAULT NULL,
   signup_from DATE DEFAULT NULL,
   signup_to DATE DEFAULT NULL,
@@ -143,5 +126,38 @@ CREATE TABLE maketing_event (
   modiry_time DATE DEFAULT NULL,
   audit_time DATE DEFAULT NULL
 );
-insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','f340562657e64e4099695c4b865017dd','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
-insert into maketing_event(id,branch_id,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','f340562657e64e4099695c4b865017dd','活动2',to_date('2014-08-09','yyyy-mm-dd'),to_date('2014-08-10','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+insert into maketing_event(id,own_no,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','115','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+insert into maketing_event(id,own_no,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','115','活动2',to_date('2014-08-09','yyyy-mm-dd'),to_date('2014-08-10','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+
+
+DROP TABLE wechat_identity_correlation;
+CREATE TABLE wechat_identity_correlation (
+	id char(32) NOT NULL,
+	account_id VARCHAR2(64) DEFAULT NULL,
+	open_id VARCHAR2(64) DEFAULT NULL,
+	client_id CHAR(32) DEFAULT NULL,
+	vehicle_id CHAR(32) DEFAULT NULL,
+	status NUMBER(5) DEFAULT NULL,
+	correlation_time DATE DEFAULT NULL,
+	uncorrelation_time DATE  DEFAULT NULL
+);
+insert into wechat_identity_correlation(id,open_id,client_id,vehicle_id) values('c5690f016e044b57b1048566cdc62c10','liangyx','3dd9515466b84c4c8872ac79776befda','ba19ab18ad424a009885084c9dcaaea4');
+
+DROP TABLE vehicle;
+CREATE TABLE vehicle (
+	id char(32) NOT NULL,
+	vin VARCHAR2(25) DEFAULT NULL,
+	register_no VARCHAR2(20) DEFAULT NULL,
+	factory_code VARCHAR2(20) DEFAULT NULL,
+	factory VARCHAR2(20) DEFAULT NULL,
+	model_code VARCHAR2(20) DEFAULT NULL,
+	model VARCHAR2(30) DEFAULT NULL,
+	member_id VARCHAR2(30) DEFAULT NULL,
+	member_type VARCHAR2(14) DEFAULT NULL,
+	member_reg_name VARCHAR2(8) DEFAULT NULL,
+	member_remark VARCHAR2(60) DEFAULT NULL,
+	own_no CHAR(3) DEFAULT NULL,
+	member_limit DATE DEFAULT NULL,
+	member_no VARCHAR2(20) DEFAULT NULL
+);
+insert into vehicle(id,vin,register_no,model_code,model,own_no) values('ba19ab18ad424a009885084c9dcaaea4','1237121','粤A2128L','kadh1933h1k','高尔夫7','115');
