@@ -29,11 +29,10 @@ public class ReserveController {
 	
 	@RequestMapping(value = "/create")
 	public String index(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
-		String clientid=Utils.getClientidByOpenid(openid);
 		//获取车辆数据
-		List<Map<String,Object>> mycar=getService().getClientCarsInfo(clientid);
+		List<Map<String,Object>> mycar=getService().getClientCarsInfo(openid);
 		//获取4s店数据
-		List<Map<String,Object>> shop=getService().getShopsInfo(openid,clientid);
+		List<Map<String,Object>> shop=getService().getShopsInfo(openid);
 		model.addAttribute("openid", openid);
 		model.addAttribute("mycar", mycar);
 		model.addAttribute("shop", shop);
@@ -134,5 +133,12 @@ public class ReserveController {
 			result.put("code", "0");
 		}
 		return result;
+	}
+	
+	@RequestMapping(value = "/getShopDetail")
+	public @ResponseBody Map<String, Object> getShopDetail(
+			@RequestParam(value = "shopid", required = true) String shopid) {
+		Map<String,String> result=new HashMap<String, String>();
+		return this.getService().getShopDetail(shopid);
 	}
 }

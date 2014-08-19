@@ -63,6 +63,18 @@
 						</c:forEach>
 	  				</select>
 				</div>
+				<div id="shop_details" class="alert alert-warning" style="padding: 8px;display:none;" role="alert">
+					<table>
+						<tr>
+							<td style="font-weight: bolder;width:50px;vertical-align: top;">地址：</td>
+							<td id="shop_address"></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bolder;width:50px;vertical-align: top;">电话：</td>
+							<td id="shop_telephone"></td>
+						</tr>
+					</table>
+				</div>
 			</div>
 			<!-- 选择店 end-->
 			
@@ -139,6 +151,7 @@ $(document).ready(function(){
 	var selectShop=$("#select_shop").val();
 	if(selectShop!=-1){
 		loadSelectTime(selectShop);
+		loadShopDetail(selectShop);
 	}
 	
 	
@@ -154,6 +167,7 @@ $(document).ready(function(){
 	$("#select_shop").on("change",function(){
 		var val=$(this).val();
 		loadSelectTime(val);
+		loadShopDetail(val);
 	});
 	
 	$("#select_time").on("change",function(){
@@ -176,14 +190,15 @@ $(document).ready(function(){
 	            	if(dataObj.length>0){
 		            	var selectTime=$('#select_time');
 		            	selectTime.empty();
-		            	$.each(dataObj, function(index, value) {
-		            		selectTime.append("<option value='"+value.id+"'>"+value.begin+" - "+ value.end+"</option>");
-		            	});
 		            	var other=dataObj[0].id;
 		            	if(other=='other'){
 		            		selectTime.attr("disabled",true);
+		            		selectTime.append("<option value='other'>预约已满</option>");
 		            	}else{
 		            		selectTime.attr("disabled",false);
+			            	$.each(dataObj, function(index, value) {
+			            		selectTime.append("<option value='"+value.id+"'>"+value.begin+" - "+ value.end+"</option>");
+			            	});
 		            	}
 	            	}
 	            	
@@ -320,6 +335,26 @@ $(document).ready(function(){
 			sr.text(msg);
 			sr.show();
 		}
+	}
+	
+	function loadShopDetail(shopid){
+		console.log(shopid);
+		$.ajax({
+            type: "POST",
+            url: "/reserve/getShopDetail.do",
+            data: {shopid:shopid},
+            dataType: "json",
+            success: function(data){
+           		var dataObj=eval(data);
+           		$("#shop_details").show();
+           		$("#shop_address").text(dataObj.ADDRESS);
+           		var tel="";
+           		if(dataObj.TELEPHONE!=null){
+           			tel=dataObj.TELEPHONE;
+           		}
+           		$("#shop_telephone").text(tel);
+            }
+        });
 	}
 });
 

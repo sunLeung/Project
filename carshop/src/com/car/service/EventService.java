@@ -1,5 +1,6 @@
 package com.car.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,17 +8,24 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.car.dao.ClientDao;
 import com.car.dao.EventDao;
-import com.car.utils.Utils;
 
 @Service
 public class EventService {
 	
 	@Resource(name = "eventDao")
-	private EventDao dao;
+	private EventDao evetnDao;
 
-	protected EventDao getDAO() {
-		return dao;
+	protected EventDao getEventDAO() {
+		return evetnDao;
+	}
+	
+	@Resource(name = "clientDao")
+	private ClientDao clientDao;
+	
+	protected ClientDao getClientDao() {
+		return clientDao;
 	}
 	
 	/**
@@ -26,14 +34,13 @@ public class EventService {
 	 * @return
 	 */
 	public List<Map<String,Object>> getEventsData(String openid){
-		//获取客户ID
-		String clientid=Utils.getClientidByOpenid(openid);
+		String clientid=this.getClientDao().getClientid(openid);
 		//获取4s店ID
-		String shopid=Utils.getShopidByClientid(clientid);
+		List<String> shopids=this.getClientDao().getClientOwnShop(openid);
 		//获取4s店进行中的活动列表
-		List<Map<String,Object>> shopEvents=getDAO().getActiveEventList(shopid);
+		List<Map<String,Object>> shopEvents=getEventDAO().getActiveEventList(shopids);
 		//获取客户参与的活动列表
-		List<String> clientEvents=getDAO().getClientJoinedEvent(clientid);
+		List<String> clientEvents=getEventDAO().getClientJoinedEvent(clientid);
 		//过滤活动列表分析客户活动参与情况
 		for(Map<String,Object> m:shopEvents){
 			String eventid=(String)m.get("id");
@@ -53,7 +60,48 @@ public class EventService {
 	 * @return
 	 */
 	public int joinEvent(String openid,String eventid){
-		String clientid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().joinEvent(clientid,openid,eventid);
+		String clientid=this.getClientDao().getClientid(openid);
+		return this.getEventDAO().joinEvent(clientid,openid,eventid);
 	}
+	
+	/**
+	 * 获取活动信息
+	 * @param eventid
+	 * @return
+	 */
+	public Map<String,Object> getEventDetail(String eventid){
+		return this.getEventDAO().getEventDetail(eventid);
+	}
+	
+	/**
+	 * 用户完成活动
+	 * @param openid
+	 * @param eventid
+	 * @return
+	 */
+	public Map<String,Object> finishEvent(String openid,String eventid){
+		Map<String,Object> result=new HashMap<String, Object>();
+		//判断用户是否之前已经报名
+		boolean isJoin=this.getEventDAO().isJoinThisEvent(openid, eventid);
+		if(!isJoin){
+			result.put("code", 1);
+			result.put("msg", "该用户没有参与该活动，加分失败。");
+			return result;
+		}
+		//获取该活动的积分
+		List<Integer> score=this.getEventDAO().getEventScore(eventid);
+		if(score==null||score.size()==0){
+			result.put("code", 2);
+			result.put("msg", "系统没有找到该活动积分配置，加分失败。");
+			return result;
+		}
+		int s=score.get(0);
+		
+		// TODO:调用外部接口给客户加积分
+		result.put("code", 0);
+		result.put("msg", "已加："+s+"积分。");
+		return result;
+	}
+	
+	
 }

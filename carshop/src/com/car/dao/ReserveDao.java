@@ -159,12 +159,11 @@ public class ReserveDao {
 	 * @param consultantid
 	 * @return
 	 */
-	public synchronized int createAppointment(String openid,
+	public synchronized int createAppointment(String clientid,
 			Date appointmentStart,Date appointmentEnd, String appointmentid, String carid,
 			boolean isOther, String otherCarNum, String otherCarVin,String Shopid,
 			String timeid, String teamid, String consultantid) {
 		String sql = "insert into appointment_detail(id,team_id,consultant_id,client_id,appointment_start,appointment_end,vin,register_no,own_no,status) values(?,?,?,?,?,?,?,?,?,?)";
-		String clientid = Utils.getClientidByOpenid(openid);
 		// 再次检查是否还有预约名额
 		int remain = getAppointmentRemain(appointmentid);
 		if(remain>0){
@@ -278,5 +277,15 @@ public class ReserveDao {
 	public List<Map<String,Object>> getAllShopInfo(){
 		String sql="select own_no,print_title from user_reg_info";
 		return this.jdbcTemplate.queryForList(sql);
-	} 
+	}
+	
+	/**
+	 * 获取4S店信息
+	 * @param shopid
+	 * @return
+	 */
+	public Map<String,Object> getShopDetail(String shopid){
+		String sql="select address,telephone from user_reg_info where own_no=?";
+		return this.jdbcTemplate.queryForMap(sql, shopid);
+	}
 }

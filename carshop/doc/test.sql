@@ -114,21 +114,39 @@ CREATE TABLE appointment_rating (
 DROP TABLE maketing_event;
 CREATE TABLE maketing_event (
   id char(32) NOT NULL,
-  own_no char(32) DEFAULT NULL,
+  own_no char(3) DEFAULT NULL,
   name char(32) DEFAULT NULL,
   signup_from DATE DEFAULT NULL,
   signup_to DATE DEFAULT NULL,
   description varchar2(128) DEFAULT NULL,
-  has_picture INTEGER DEFAULT NULL,
+  title_img varchar2(32) DEFAULT NULL,
   operate_user char(32) DEFAULT NULL,
   audit_user char(32) DEFAULT NULL,
   create_time DATE DEFAULT NULL,
   modiry_time DATE DEFAULT NULL,
   audit_time DATE DEFAULT NULL
 );
-insert into maketing_event(id,own_no,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','115','活动1',to_date('2014-08-06','yyyy-mm-dd'),to_date('2014-08-07','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
-insert into maketing_event(id,own_no,name,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c88','115','活动2',to_date('2014-08-09','yyyy-mm-dd'),to_date('2014-08-10','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
+insert into maketing_event(id,own_no,name,title_img,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c87','115','周末免费检测','test.png',to_date('2014-08-20','yyyy-mm-dd'),to_date('2014-08-23','yyyy-mm-dd'),'<div>大众polo免费送</div><br><img src="/img/polo.jpg"/>');
+insert into maketing_event(id,own_no,name,title_img,signup_from,signup_to,description) values('f09e305a48f54efa86bf5f0bbe736c86','115','老顾客送好礼','test.png',to_date('2014-08-21','yyyy-mm-dd'),to_date('2014-08-23','yyyy-mm-dd'),'<div>活动内容XXXX</div><br><div>just activity</div>');
 
+DROP TABLE maketing_event_signup;
+CREATE TABLE maketing_event_signup (
+  id char(32) NOT NULL,
+  event_id char(32) DEFAULT NULL,
+  client_id char(32) DEFAULT NULL,
+  open_id VARCHAR2(64) DEFAULT NULL,
+  signup_date DATE DEFAULT NULL
+);
+
+DROP TABLE maketing_event_points_config;
+CREATE TABLE maketing_event_points_config (
+  id char(32) NOT NULL,
+  event_id char(32) DEFAULT NULL,
+  points_amount INTEGER DEFAULT NULL,
+  remark varchar2(32) DEFAULT NULL
+);
+insert into maketing_event_points_config(id,event_id,points_amount) values('4a4bbb21f898496ea9c99aaae51a3771','f09e305a48f54efa86bf5f0bbe736c87',10);
+insert into maketing_event_points_config(id,event_id,points_amount) values('19c7dc88d3be48199fe204c5bcdcfc03','f09e305a48f54efa86bf5f0bbe736c86',16);
 
 DROP TABLE wechat_identity_correlation;
 CREATE TABLE wechat_identity_correlation (
@@ -141,7 +159,9 @@ CREATE TABLE wechat_identity_correlation (
 	correlation_time DATE DEFAULT NULL,
 	uncorrelation_time DATE  DEFAULT NULL
 );
-insert into wechat_identity_correlation(id,open_id,client_id,vehicle_id) values('c5690f016e044b57b1048566cdc62c10','liangyx','3dd9515466b84c4c8872ac79776befda','ba19ab18ad424a009885084c9dcaaea4');
+insert into wechat_identity_correlation(id,open_id,client_id,vehicle_id,status) values('1a15154657c846cca4b574968cbe9e07','liangyx','2df9a11c64ac4d63b693f77ab73c852f','ba19ab18ad424a009885084c9dcaaea4',1);
+insert into wechat_identity_correlation(id,open_id,client_id,vehicle_id,status) values('7469f79a8de848a6a03dc1e34e9b9ebe','liangyx','2df9a11c64ac4d63b693f77ab73c852f','60b358f7648a48aa9122ac4801582052',1);
+insert into wechat_identity_correlation(id,open_id,client_id,vehicle_id,status) values('53e12fcf0ccd45578a35a8178eb3e054','liang','e218457dc895492dbd36861c97775a38','c695dc5794484ad1804612c99fe3dcea',1);
 
 DROP TABLE vehicle;
 CREATE TABLE vehicle (
@@ -161,3 +181,5 @@ CREATE TABLE vehicle (
 	member_no VARCHAR2(20) DEFAULT NULL
 );
 insert into vehicle(id,vin,register_no,model_code,model,own_no) values('ba19ab18ad424a009885084c9dcaaea4','1237121','粤A2128L','kadh1933h1k','高尔夫7','115');
+insert into vehicle(id,vin,register_no,model_code,model,own_no) values('60b358f7648a48aa9122ac4801582052','adad21f','粤A91371','9aadf33h1ok','Polo','114');
+insert into vehicle(id,vin,register_no,model_code,model,own_no) values('c695dc5794484ad1804612c99fe3dcea','8127ndsl','粤ALast','adsfffawqok','途观','114');

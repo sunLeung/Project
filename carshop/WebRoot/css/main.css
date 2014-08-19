@@ -27,12 +27,32 @@ body{
 }
 
 .callout {
-padding: 5px;
-margin: 10px 0;
-border: 1px solid #ee8c28;
-border-left-width: 5px;
-border-radius: 3px;
+	padding: 5px;
+	margin: 10px 0;
+	border: 1px solid #ee8c28;
+	border-left-width: 5px;
+	border-radius: 3px;
 }
 .callout-info {
-border-left-color: #5bc0de;
+	border-left-color: #5bc0de;
+}
+
+.eventContaint{
+	padding:4px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+.eventImg{
+	display: inline-block;
+	width: 100% \9;
+	max-width: 100%;
+	height: auto;
+	line-height: 1.42857143;
+	background-color: #fff;
+	-webkit-transition: all .2s ease-in-out;
+	-o-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
 }

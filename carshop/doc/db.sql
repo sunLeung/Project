@@ -139,12 +139,12 @@ CREATE TABLE vehicle (
 DROP TABLE maketing_event;
 CREATE TABLE maketing_event (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no char(3) DEFAULT NULL,
   name char(32) DEFAULT NULL,
   signup_from DATE DEFAULT NULL,
   signup_to DATE DEFAULT NULL,
   description varchar2(128) DEFAULT NULL,
-  has_picture INTEGER DEFAULT NULL,
+  title_img varchar2(32) DEFAULT NULL,
   operate_user char(32) DEFAULT NULL,
   audit_user char(32) DEFAULT NULL,
   create_time DATE DEFAULT NULL,

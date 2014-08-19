@@ -23,13 +23,36 @@
 		<c:if test="${!empty myappointment}">
 		<c:forEach var="item" items="${myappointment}" varStatus="status"> 
 		<div class="callout callout-info">
-			<p><label style="margin:0px;">预约时间:</label><fmt:formatDate value="${item.appointment_start}" pattern="yyyy/MM/dd HH:mm" /> - <fmt:formatDate value="${item.appointment_end}" pattern="yyyy/MM/dd HH:mm" /></p>
-			<p><label style="margin:0px;">车型:</label> ${item.model}</p>
-			<p><label style="margin:0px;">车牌:</label> ${item.register_no}</p>
-			<p><label style="margin:0px;">车架号:</label> ${item.vin}</p>
-			<p><label style="margin:0px;">4S店:</label> ${item.print_title}</p>
-			<p><label style="margin:0px;">电话:</label> ${item.telephone}</p>
-			<p><label style="margin:0px;">地址:</label> ${item.address}</p>
+			<table>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">时间：</td>
+					<td><fmt:formatDate value="${item.appointment_start}" pattern="yyyy-MM-dd HH:mm" />至<fmt:formatDate value="${item.appointment_end}" pattern="yyyy-MM-dd HH:mm" /></td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车型：</td>
+					<td>${item.model}</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车牌：</td>
+					<td>${item.register_no}</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车架：</td>
+					<td>${item.vin}</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">4S店：</td>
+					<td>${item.print_title}</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">地址：</td>
+					<td>${item.address}</td>
+				</tr>
+				<tr>
+					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">电话：</td>
+					<td>${item.telephone}</td>
+				</tr>
+			</table>
 			<p class="text-right"><button class="btn btn-default" name="delete" aid="${item.id}">取消预约</button></p>
 		</div>
 		</c:forEach>

@@ -12,17 +12,24 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.car.dao.ClientDao;
 import com.car.dao.ReserveDao;
-import com.car.utils.Utils;
 
 @Service
 public class ReserveService {
 	
 	@Resource(name = "reserveDao")
-	private ReserveDao dao;
+	private ReserveDao reserveDao;
 
-	protected ReserveDao getDAO() {
-		return dao;
+	protected ReserveDao getReserveDAO() {
+		return reserveDao;
+	}
+	
+	@Resource(name = "clientDao")
+	private ClientDao clientDao;
+	
+	protected ClientDao getClientDao() {
+		return clientDao;
 	}
 	
 	/**
@@ -30,8 +37,9 @@ public class ReserveService {
 	 * @param clientid
 	 * @return
 	 */
-	public List<Map<String,Object>> getClientCarsInfo(String clientid){
-		List<Map<String,Object>> result=getDAO().getClientCar(clientid);
+	public List<Map<String,Object>> getClientCarsInfo(String openid){
+		String clientid=this.getClientDao().getClientid(openid);
+		List<Map<String,Object>> result=getReserveDAO().getClientCar(clientid);
 		return result;
 	}
 	
@@ -41,13 +49,14 @@ public class ReserveService {
 	 * @param clientid
 	 * @return
 	 */
-	public List<Map<String,Object>> getShopsInfo(String openid,String clientid){
+	public List<Map<String,Object>> getShopsInfo(String openid){
+		String clientid=this.getClientDao().getClientid(openid);
 		//获取最近预约过的4s店
-		String recentShopid=this.dao.getRecentAppointmentShopid(clientid);
+		String recentShopid=this.reserveDao.getRecentAppointmentShopid(clientid);
 		//购车的4s店
-		List<String> buyCarShops=this.dao.getBuyCarShopid(openid);
+		List<String> buyCarShops=this.reserveDao.getBuyCarShopid(openid);
 		//所有的4s店
-		List<Map<String,Object>> shopInfo=this.dao.getAllShopInfo();
+		List<Map<String,Object>> shopInfo=this.reserveDao.getAllShopInfo();
 		//排序结果返回数据
 		List<Map<String,Object>> result=new ArrayList<Map<String,Object>>();
 		
@@ -65,7 +74,7 @@ public class ReserveService {
 			for(String sid:buyCarShops){
 				for(Map<String,Object> map:shopInfo){
 					String shopid=(String)map.get("own_no");
-					if(sid.equals(shopid)){
+					if(sid.equals(shopid)&&!result.contains(map)){
 						result.add(map);
 						break;
 					}
@@ -92,10 +101,10 @@ public class ReserveService {
 	 */
 	public List<Map<String,String>> getAppointmentTimeByShop(String shopid){
 		//获取该4s店所有班组
-		List<String> teamids= this.getDAO().getShopTeam(shopid);
+		List<String> teamids= this.getReserveDAO().getShopTeam(shopid);
 		
 		//获取可预约时间
-		List<Map<String,Object>> appointmentTime=this.getDAO().getAppointmentTime();
+		List<Map<String,Object>> appointmentTime=this.getReserveDAO().getAppointmentTime();
 		
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -133,7 +142,7 @@ public class ReserveService {
 	 */
 	public List<Map<String,String>> getTeamByShopAndTime(String shopid,String time){
 		//获取4s店所有班组
-		List<String> teamids= this.getDAO().getShopTeam(shopid);
+		List<String> teamids= this.getReserveDAO().getShopTeam(shopid);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		Date d = null;
 		try {
@@ -142,7 +151,7 @@ public class ReserveService {
 			e.printStackTrace();
 		}
 		//获取某时刻的可预约班组
-		List<Map<String,Object>> appointmentTeamByTime=this.getDAO().getAppointmentTeam(d);
+		List<Map<String,Object>> appointmentTeamByTime=this.getReserveDAO().getAppointmentTeam(d);
 		List<Map<String,String>> result=new ArrayList<Map<String,String>>();
 		for(Map<String,Object> map:appointmentTeamByTime){
 			String id=(String)map.get("id");
@@ -180,7 +189,7 @@ public class ReserveService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		List<Map<String,String>> result=this.getDAO().getAppointmentConsultant(d,shopid);
+		List<Map<String,String>> result=this.getReserveDAO().getAppointmentConsultant(d,shopid);
 		if(result.size()<=0){
 			Map<String,String> map=new HashMap<String, String>();
 			map.put("id", "other");
@@ -230,7 +239,7 @@ public class ReserveService {
 				return result;
 			}
 		}else{
-			List<Map<String,Object>> carInfo=this.dao.getCarInfo(carid);
+			List<Map<String,Object>> carInfo=this.reserveDao.getCarInfo(carid);
 			if(carInfo.size()==0){
 				result.put("code", "3");
 				result.put("msg", "预约失败，没有找到该车信息，请手动填写。");
@@ -242,13 +251,14 @@ public class ReserveService {
 			}
 		}
 		//再次检查是否还有预约名额
-		int remain=this.dao.getAppointmentRemain(appointmentid);
+		int remain=this.reserveDao.getAppointmentRemain(appointmentid);
 		if(remain<=0){
 			result.put("code", "4");
 			result.put("msg", "预约失败，已经没有预约名额。请选择其他预约。");
 			return result;
 		}
-		int r=this.dao.createAppointment(openid, ds,de, appointmentid, carid, isOther, otherCarNum, otherCarVin,shopid, timeid, teamid, consultantid);
+		String clientid=this.getClientDao().getClientid(openid);
+		int r=this.reserveDao.createAppointment(clientid, ds,de, appointmentid, carid, isOther, otherCarNum, otherCarVin,shopid, timeid, teamid, consultantid);
 		if(r>0){
 			result.put("code", "1");
 			result.put("msg", "预约成功。");
@@ -265,8 +275,8 @@ public class ReserveService {
 	 * @return
 	 */
 	public List<Map<String,Object>> queryAppointment(String openid){
-		String uid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().getClientAppointments(uid);
+		String clientid=this.getClientDao().getClientid(openid);
+		return this.getReserveDAO().getClientAppointments(clientid);
 	}
 	
 	/**
@@ -275,7 +285,7 @@ public class ReserveService {
 	 * @return
 	 */
 	public int deleteAppointment(String appointmentid){
-		return this.getDAO().deleteAppointment(appointmentid);
+		return this.getReserveDAO().deleteAppointment(appointmentid);
 	}
 	
 	/**
@@ -284,8 +294,8 @@ public class ReserveService {
 	 * @return
 	 */
 	public List<Map<String,Object>> getCanRateAppointment(String openid){
-		String uid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().getOvertimeAppointment(uid);
+		String clientid=this.getClientDao().getClientid(openid);
+		return this.getReserveDAO().getOvertimeAppointment(clientid);
 	}
 	
 	/**
@@ -297,7 +307,11 @@ public class ReserveService {
 	 * @return
 	 */
 	public int ratingAppointment(String openid,String appointmentid,int tscore,int cscore){
-		String uid=Utils.getClientidByOpenid(openid);
-		return this.getDAO().ratingAppointment(uid,appointmentid,tscore,cscore);
+		String clientid=this.getClientDao().getClientid(openid);
+		return this.getReserveDAO().ratingAppointment(clientid,appointmentid,tscore,cscore);
+	}
+	
+	public Map<String,Object> getShopDetail(String shopid){
+		return this.getReserveDAO().getShopDetail(shopid);
 	}
 }

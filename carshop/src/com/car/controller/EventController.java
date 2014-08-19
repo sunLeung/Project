@@ -63,4 +63,27 @@ public class EventController {
 		}
 		return result;
 	}
+	
+	/**
+	 * 获取活动详细信息
+	 * @param eventid
+	 * @return
+	 */
+	@RequestMapping(value = "/getEventDetail")
+	public @ResponseBody Map<String, Object> getEventDetail(@RequestParam(value = "eventid", required = true) String eventid) {
+		return this.getService().getEventDetail(eventid);
+	}
+	
+	/**
+	 * 获取活动详细信息
+	 * @param eventid
+	 * @return
+	 */
+	@RequestMapping(value = "/finishEvent")
+	public @ResponseBody Map<String, Object> getEventDetail(
+			@RequestParam(value = "openid", required = true) String openid,
+			@RequestParam(value = "eventid", required = true) String eventid,
+			ModelMap model) {
+		return this.getService().finishEvent(openid,eventid);
+	}
 }
