@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- 全局保存openid -->
-<input id="openid" value=${openid} type="hidden"/>
+<input id="openid" value="${openid}" type="hidden"/>
 <div class="container-fluid" style="margin-bottom: 55px;">
 <div class="row">
 	<div class="col-xs-12">
@@ -73,6 +73,16 @@
 	  </div>
 	</div>
 </div>
+
+
+<!-- 二次确认框 -->
+<div class="myconfirm">
+	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div>
+		<button type="button" class="btn btn-default close-btn" id="close">close</button>
+		<button type="button" class="btn confirm-btn" id="confirm">confirm</button>
+	</div>
+</div>
 </body>
 
 <!-- scripts -->
@@ -98,6 +108,22 @@ $(document).ready(function(){
             }
         	});
 	});
+	/**二次确认框*/
+	function myconfirm(msg,callback){
+		var myconfirm=$(".myconfirm");
+		myconfirm.find("#confirm_content p").empty();
+		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#confirm").off("click");
+		myconfirm.find("#confirm").on("click",function(){
+			callback();
+			myconfirm.hide();
+		});
+		myconfirm.find("#close").off("click");
+		myconfirm.find("#close").on("click",function(){
+			myconfirm.hide();
+		});
+		myconfirm.show();
+	}
 });
 
 </script>

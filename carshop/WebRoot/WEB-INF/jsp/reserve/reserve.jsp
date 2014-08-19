@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- 全局保存openid -->
-<input id="openid" value=${openid} type="hidden"/>
+<input id="openid" value="${openid}" type="hidden"/>
 <div class="container-fluid" style="margin-bottom: 55px;">
 <div class="row">
 	<div class="col-xs-12" style="padding-left: 5px;padding-right: 5px;">
@@ -191,7 +191,16 @@
 	  </div>
 	</div>
 </div>
-</body>
+
+<!-- 二次确认框 -->
+<div class="myconfirm">
+	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div>
+		<button type="button" class="btn btn-default close-btn" id="close">close</button>
+		<button type="button" class="btn confirm-btn" id="confirm">confirm</button>
+	</div>
+</div>
+
 </body>
 
 <!-- scripts -->
@@ -366,56 +375,60 @@ $(document).ready(function(){
 			}
 		}
 	
+	
+	
 	$("#create").on("click",function(){
-		var btn = $(this);
-		var openid=$("#openid").val();
-		var carid=$("#select_car").val();
-		var isOther=false;
-		var otherCarNum=$("#other_car_num").val();
-		var otherCarVin=$("#other_car_vin").val();
-		if(carid=="other"){
-			if(otherCarNum==""&&otherCarVin==""){
-				showResult(0,"车牌号和车架号至少填写一个。");
+		var msg="确定预约？";
+		myconfirm(msg,function(){
+			var btn = $(this);
+			var openid=$("#openid").val();
+			var carid=$("#select_car").val();
+			var isOther=false;
+			var otherCarNum=$("#other_car_num").val();
+			var otherCarVin=$("#other_car_vin").val();
+			if(carid=="other"){
+				if(otherCarNum==""&&otherCarVin==""){
+					showResult(0,"车牌号和车架号至少填写一个。");
+					return;
+				}
+				isOther=true;
+			}
+			var shopid=$("#select_shop").val();
+			if(shopid==-1){
+				showResult(0,"请选择4S店。");
 				return;
 			}
-			isOther=true;
-		}
-		var shopid=$("#select_shop").val();
-		if(shopid==-1){
-			showResult(0,"请选择4S店。");
-			return;
-		}
-		var timeid=$("#select_time").val();
-		if(timeid==-1){
-			showResult(0,"请选择预约时间。");
-			return;
-		}
-		var teamid=$("#select_team").val();
-		var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
-		if(teamid==-1){
-			showResult(0,"请选择班组。");
-			return;
-		}
-		var consultantid=$("#select_consultant").val();
-		if(consultantid==-1){
-			showResult(0,"请选择顾问。");
-			return;
-		}
-		btn.button('loading');
-		$.ajax({
-            type: "POST",
-            url: "/reserve/save.do",
-            data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
-            dataType: "json",
-            success: function(data){
-            	btn.button('reset');
-           		var dataObj=eval(data);
-           		console.log(dataObj.code);
-           		console.log(dataObj.msg);
-           		showResult(dataObj.code,dataObj.msg);
-            }
-        	});
-		
+			var timeid=$("#select_time").val();
+			if(timeid==-1){
+				showResult(0,"请选择预约时间。");
+				return;
+			}
+			var teamid=$("#select_team").val();
+			var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
+			if(teamid==-1){
+				showResult(0,"请选择班组。");
+				return;
+			}
+			var consultantid=$("#select_consultant").val();
+			if(consultantid==-1){
+				showResult(0,"请选择顾问。");
+				return;
+			}
+			btn.button('loading');
+			$.ajax({
+	            type: "POST",
+	            url: "/reserve/save.do",
+	            data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
+	            dataType: "json",
+	            success: function(data){
+	            	btn.button('reset');
+	           		var dataObj=eval(data);
+	           		console.log(dataObj.code);
+	           		console.log(dataObj.msg);
+	           		showResult(dataObj.code,dataObj.msg);
+	            }
+	        	});
+		});
 	});
 	
 	function showResult(code,msg){
@@ -452,6 +465,23 @@ $(document).ready(function(){
            		$("#shop_telephone").text(tel);
             }
         });
+	}
+	
+	/**二次确认框*/
+	function myconfirm(msg,callback){
+		var myconfirm=$(".myconfirm");
+		myconfirm.find("#confirm_content p").empty();
+		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#confirm").off("click");
+		myconfirm.find("#confirm").on("click",function(){
+			callback();
+			myconfirm.hide();
+		});
+		myconfirm.find("#close").off("click");
+		myconfirm.find("#close").on("click",function(){
+			myconfirm.hide();
+		});
+		myconfirm.show();
 	}
 });
 
