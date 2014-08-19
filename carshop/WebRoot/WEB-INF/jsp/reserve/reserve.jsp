@@ -24,26 +24,73 @@
 			<!-- 选择车 begin-->
 			<div style="margin-bottom: 10px;">
 				<div class="input-group">
-	  				<span class="input-group-addon"><span class="inputLabel">选择车型</span></span>
-	  				<select class="form-control" id="select_car" name="carid">
+	  				<span class="input-group-addon"><span class="inputLabel">我的车型</span></span>
+	  				<select class="form-control" id="select_mycar" name="carid">
 	  					<optgroup label="我的车型">
 							<c:if test="${!empty mycar}" >
 							<c:forEach var="item" items="${mycar}" varStatus="status"> 
-								<option value="${item.id}">${item.model }&nbsp;${item.register_no }</option>
+								<option value="${item.id}" modelCode="${item.model_code}">${item.model }</option>
 							</c:forEach>
 							</c:if>
-							<option value="other">手动输入</option>
+							<c:if test="${empty mycar}" >
+								<option value="-1">暂无绑定车辆</option>
+							</c:if>
 						</optgroup>
 	  				</select>
 				</div>
-				<div id="other_car" style="display: none;">
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">厂牌</span></span>
+	  				<select class="form-control" id="select_brand" name="carid">
+	  					<optgroup label="A">
+	  						<option>奥迪</option>
+	  						<option>阿斯顿马丁</option>
+	  						<option>AC宝马</option>
+	  					</optgroup>
+	  					<optgroup label="B">
+	  						<option>宝马</option>
+	  						<option>奔驰</option>
+	  						<option>本田</option>
+						</optgroup>
+	  				</select>
+				</div>
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">车系</span></span>
+	  				<select class="form-control" id="select_series" name="carid">
+	  					<optgroup label="A">
+	  						<option>奥迪</option>
+	  						<option>阿斯顿马丁</option>
+	  						<option>AC宝马</option>
+	  					</optgroup>
+	  					<optgroup label="B">
+	  						<option>宝马</option>
+	  						<option>奔驰</option>
+	  						<option>本田</option>
+						</optgroup>
+	  				</select>
+				</div>
+				<div class="input-group">
+	  				<span class="input-group-addon"><span class="inputLabel">型号</span></span>
+	  				<select class="form-control" id="select_model" name="carid">
+	  					<optgroup label="A">
+	  						<option>奥迪</option>
+	  						<option>阿斯顿马丁</option>
+	  						<option>AC宝马</option>
+	  					</optgroup>
+	  					<optgroup label="B">
+	  						<option>宝马</option>
+	  						<option>奔驰</option>
+	  						<option>本田</option>
+						</optgroup>
+	  				</select>
+				</div>
+				<div id="other_car">
 					<div class="input-group" >
 						<span class="input-group-addon"><span class="inputLabel">车牌</span></span>
-						<input class="form-control" id="other_car_num" type="text" placeholder="填写车牌号"/>
+						<input class="form-control" id="car_num" type="text" placeholder="填写车牌号"/>
 					</div>
 					<div class="input-group" >
 						<span class="input-group-addon"><span class="inputLabel">车架号</span></span>
-						<input class="form-control" id="other_car_vin" type="text" placeholder="填写车架号"/>
+						<input class="form-control" id="car_vin" type="text" placeholder="填写车架号"/>
 					</div>
 					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
 				</div>
@@ -139,12 +186,38 @@
 <script src="/lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
-	//手动输入车型是否显示
-	var carSelectVal=$("#select_car").val();
-	if(carSelectVal=="other"){
-		$("#other_car").show();
-	}else{
-		$("#other_car").hide();
+	//加载客户车辆信息
+	loadMaycar();
+	
+	$("#select_mycar").on("click",function(){
+		loadMaycar();
+	});
+	
+	function loadMaycar(){
+		var mycarid=$("#select_mycar").val();
+		//var modelcode=$("#select_mycar").find("option:selected").attr("modelcode");
+		if(mycarid!=-1){
+			$.ajax({
+	            type: "GET",
+	            url: "/reserve/getMycarInfo.do",
+	            data: {mycarid:mycarid},
+	            dataType: "json",
+	            success: function(data){
+	           		var dataObj=eval(data);
+	           		var num=data.REGISTER_NO;
+	           		var vin=data.VIN;
+	           		if(num){
+		           		$("#car_num").val(num);
+	           		}else{
+	           			$("#car_num").val();
+	           		}
+	           		if(vin){
+		           		$("#car_vin").val(vin);
+		           		$("#car_vin").val();
+	           		}
+	            }
+	        });
+		}
 	}
 	
 	//加载预约时间

@@ -30,9 +30,9 @@ public class ReserveDao {
 	 * @param clientid
 	 * @return
 	 */
-	public List<Map<String,Object>> getClientCar(String clientid){
-		String sql = "select id,register_no,model from vehicle where member_id=?";
-		return jdbcTemplate.queryForList(sql,clientid);
+	public List<Map<String,Object>> getClientCar(String openid){
+		String sql = "select b.id,b.model_code,b.model from wechat_identity_correlation a left join vehicle b on a.vehicle_id=b.id where a.open_id=?";
+		return jdbcTemplate.queryForList(sql,openid);
 	}
 	
 	
@@ -287,5 +287,15 @@ public class ReserveDao {
 	public Map<String,Object> getShopDetail(String shopid){
 		String sql="select address,telephone from user_reg_info where own_no=?";
 		return this.jdbcTemplate.queryForMap(sql, shopid);
+	}
+	
+	/**
+	 * 获取车辆信息
+	 * @param mycarid
+	 * @return
+	 */
+	public Map<String,Object> getMycarInfo(String mycarid){
+		String sql="select vin,register_no from vehicle where id=?";
+		return this.jdbcTemplate.queryForMap(sql, mycarid);
 	}
 }

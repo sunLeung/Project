@@ -38,8 +38,7 @@ public class ReserveService {
 	 * @return
 	 */
 	public List<Map<String,Object>> getClientCarsInfo(String openid){
-		String clientid=this.getClientDao().getClientid(openid);
-		List<Map<String,Object>> result=getReserveDAO().getClientCar(clientid);
+		List<Map<String,Object>> result=getReserveDAO().getClientCar(openid);
 		return result;
 	}
 	
@@ -311,7 +310,21 @@ public class ReserveService {
 		return this.getReserveDAO().ratingAppointment(clientid,appointmentid,tscore,cscore);
 	}
 	
+	/**
+	 * 获取4s店信息
+	 * @param shopid
+	 * @return
+	 */
 	public Map<String,Object> getShopDetail(String shopid){
 		return this.getReserveDAO().getShopDetail(shopid);
+	}
+	
+	/**
+	 * 获取车辆信息
+	 * @param mycarid
+	 * @return
+	 */
+	public Map<String,Object> getMycarInfo(String mycarid){
+		return this.getReserveDAO().getMycarInfo(mycarid);
 	}
 }

@@ -138,7 +138,17 @@ public class ReserveController {
 	@RequestMapping(value = "/getShopDetail")
 	public @ResponseBody Map<String, Object> getShopDetail(
 			@RequestParam(value = "shopid", required = true) String shopid) {
-		Map<String,String> result=new HashMap<String, String>();
 		return this.getService().getShopDetail(shopid);
+	}
+	
+	/**
+	 * 获取车辆信息
+	 * @param mycarid
+	 * @return
+	 */
+	@RequestMapping(value = "/getMycarInfo")
+	public @ResponseBody Map<String, Object> getMycarInfo(
+			@RequestParam(value = "mycarid", required = true) String mycarid) {
+		return this.getService().getMycarInfo(mycarid);
 	}
 }
