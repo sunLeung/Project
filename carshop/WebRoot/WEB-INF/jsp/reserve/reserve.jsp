@@ -16,14 +16,18 @@
 <input id="openid" value=${openid} type="hidden"/>
 <div class="container-fluid" style="margin-bottom: 55px;">
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12" style="padding-left: 5px;padding-right: 5px;">
 		<!-- 创建预约 -->
 		<div>
 			<h3 style="color:#ee8c28;">新建<small>预约</small></h3>
+			<div class="carousel slide">
+			<!-- Wrapper for slides -->
+			<div class="carousel-inner" role="listbox">
 			
+			<!-- 第一页 -->
 			<!-- 选择车 begin-->
-			<div style="margin-bottom: 10px;">
-				<div class="input-group">
+			<div class="item active" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 348px;">
+				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">我的车型</span></span>
 	  				<select class="form-control" id="select_mycar" name="carid">
 	  					<optgroup label="我的车型">
@@ -38,7 +42,7 @@
 						</optgroup>
 	  				</select>
 				</div>
-				<div class="input-group">
+				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">厂牌</span></span>
 	  				<select class="form-control" id="select_brand" name="carid">
 	  					<optgroup label="A">
@@ -53,7 +57,7 @@
 						</optgroup>
 	  				</select>
 				</div>
-				<div class="input-group">
+				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">车系</span></span>
 	  				<select class="form-control" id="select_series" name="carid">
 	  					<optgroup label="A">
@@ -68,7 +72,7 @@
 						</optgroup>
 	  				</select>
 				</div>
-				<div class="input-group">
+				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">型号</span></span>
 	  				<select class="form-control" id="select_model" name="carid">
 	  					<optgroup label="A">
@@ -94,9 +98,16 @@
 					</div>
 					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
 				</div>
+				<div class="text-right">
+					<span style="color:#a94442;padding: 8px;">*请选择车</span>
+					<button id="next" class="btn btn-default" style="color:#ee8c28;">下一步<span class="glyphicon glyphicon-chevron-right"></span></button>
+				</div>
 			</div>
 			<!-- 选择车 end-->
+			<!-- 第一页 end -->
 			
+			<!-- 第二页 begin -->
+			<div class="item" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 348px;">
 			<!-- 选择店 begin-->
 			<div style="margin-bottom: 10px;">
 				<div class="input-group">
@@ -156,10 +167,13 @@
 	  				</select>
 				</div>
 			</div>
+			<button id="prev" class="btn btn-default pull-left" style="position: absolute;bottom: 5px;color:#ee8c28;"><span class="glyphicon glyphicon-chevron-left"></span>上一步</button>
 			<!-- 选择顾问 end-->
-			<div class="text-right">
-				<input id="create" type="submit" value="提交预约" data-loading-text="预约中..." class="btn btn-default"/>
+			<input id="create" class="btn btn-default pull-right" style="position: absolute;bottom: 5px;right:5px;color:#ee8c28;" type="submit" value="提交预约" data-loading-text="预约中..." class="btn btn-default"/>
 			</div>
+			<!-- 第二页 end -->
+			</div>
+		</div>
 		</div>
 		<div id="success-result" style="padding: 8px;display: none;" class="alert alert-success" role="alert"></div>
 		<div id="error-result" style="padding: 8px;display: none;" class="alert alert-danger" role="alert">...</div>
@@ -186,6 +200,16 @@
 <script src="/lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
+	//驱动翻页逻辑
+	$('.carousel').carousel();
+	$('.carousel').carousel('pause');
+	$("#prev").on("click",function(){
+		$('.carousel').carousel('prev');
+	});
+	$("#next").on("click",function(){
+		$('.carousel').carousel('next');
+	});
+	
 	//加载客户车辆信息
 	loadMaycar();
 	
