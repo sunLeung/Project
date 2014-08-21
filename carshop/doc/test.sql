@@ -183,3 +183,37 @@ CREATE TABLE vehicle (
 insert into vehicle(id,vin,register_no,model_code,model,own_no) values('ba19ab18ad424a009885084c9dcaaea4','1237121','粤A2128L','kadh1933h1k','高尔夫7','115');
 insert into vehicle(id,vin,register_no,model_code,model,own_no) values('60b358f7648a48aa9122ac4801582052','adad21f','粤A91371','9aadf33h1ok','Polo','114');
 insert into vehicle(id,vin,register_no,model_code,model,own_no) values('c695dc5794484ad1804612c99fe3dcea','8127ndsl','粤ALast','adsfffawqok','途观','114');
+
+DROP TABLE car_brand;
+CREATE TABLE car_brand (
+	id char(32) NOT NULL,
+	name VARCHAR2(32) DEFAULT NULL
+);
+insert into car_brand(id,name) values('f37cd964a2cb4605a458eb638289a837','奥迪');
+insert into car_brand(id,name) values('842cf1790dc944d7bd7fe5f2a35dff63','阿斯顿马丁');
+insert into car_brand(id,name) values('8bb0a24fa4064cb6bdd98c5d50b5b9e1','AC宝马');
+insert into car_brand(id,name) values('a83cd5ec31cf4c57806996504412da5a','阿法尔罗密欧');
+insert into car_brand(id,name) values('a43d27a399f5446a8e50823ac6694df9','宝马');
+insert into car_brand(id,name) values('0275b3f0630a4154877746566c13384b','本田');
+insert into car_brand(id,name) values('d210fe272576402bb292cd363e4a52c0','奔驰');
+insert into car_brand(id,name) values('30143ca25b3343c69397192648ee25cb','大众');
+
+DROP TABLE car_series;
+CREATE TABLE car_series (
+	id char(32) NOT NULL,
+	name VARCHAR2(32) DEFAULT NULL,
+	car_brand_id char(32) NOT NULL
+);
+insert into car_series(id,name,car_brand_id) values('a0527b44f38c4d3eb755821774d74528','一汽奥迪','f37cd964a2cb4605a458eb638289a837');
+insert into car_series(id,name,car_brand_id) values('807677f1cd97424298222cbb47e12ac7','进口奥迪','f37cd964a2cb4605a458eb638289a837');
+
+DROP TABLE car_model;
+CREATE TABLE car_model (
+	id char(32) NOT NULL,
+	model VARCHAR2(32) DEFAULT NULL,
+	model_code VARCHAR2(32) DEFAULT NULL,
+	car_brand_id char(32) NOT NULL,
+	car_series_id char(32) NOT NULL
+);
+
+insert into car_model(id,model,model_code,car_brand_id,car_series_id) values('e17f8ccb788c4612baea6bca26663351','奥迪A4L','akdnk12','f37cd964a2cb4605a458eb638289a837','a0527b44f38c4d3eb755821774d74528');

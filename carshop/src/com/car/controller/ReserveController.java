@@ -31,10 +31,13 @@ public class ReserveController {
 	public String index(@RequestParam(value = "openid", required = true) String openid, ModelMap model) {
 		//获取车辆数据
 		List<Map<String,Object>> mycar=getService().getClientCarsInfo(openid);
+		//获取车辆厂商数据
+		List<Map<String,Object>> carBrands=getService().getCarBrandInfo();
 		//获取4s店数据
 		List<Map<String,Object>> shop=getService().getShopsInfo(openid);
 		model.addAttribute("openid", openid);
 		model.addAttribute("mycar", mycar);
+		model.addAttribute("carBrands", carBrands);
 		model.addAttribute("shop", shop);
 		return viewFolder.concat("reserve");
 	}
@@ -150,5 +153,27 @@ public class ReserveController {
 	public @ResponseBody Map<String, Object> getMycarInfo(
 			@RequestParam(value = "mycarid", required = true) String mycarid) {
 		return this.getService().getMycarInfo(mycarid);
+	}
+	
+	/**
+	 * 获取车系数据
+	 * @param carBrandid
+	 * @return
+	 */
+	@RequestMapping(value = "/getCarSeries")
+	public @ResponseBody List<Map<String, Object>> getCarSeries(
+			@RequestParam(value = "carBrandid", required = true) String carBrandid) {
+		return this.getService().getCarSeries(carBrandid);
+	}
+	
+	/**
+	 * 获取车型数据
+	 * @param carBrandid
+	 * @return
+	 */
+	@RequestMapping(value = "/getCarModel")
+	public @ResponseBody List<Map<String, Object>> getCarModel(
+			@RequestParam(value = "carSeriesid", required = true) String carSeriesid) {
+		return this.getService().getCarModel(carSeriesid);
 	}
 }

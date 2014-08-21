@@ -64,7 +64,7 @@
 </div>
 </div>
 
-<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1000;">
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1070;">
 	<div class="row">
 		<div class="btn-group" style="width: 100%;">
 		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>
@@ -74,15 +74,15 @@
 	</div>
 </div>
 
-
 <!-- 二次确认框 -->
 <div class="myconfirm">
 	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
 	<div>
-		<button type="button" class="btn btn-default close-btn" id="close">close</button>
-		<button type="button" class="btn confirm-btn" id="confirm">confirm</button>
+		<button type="button" class="btn btn-default close-btn" id="close">取消</button>
+		<button type="button" class="btn confirm-btn" id="confirm">确定</button>
 	</div>
 </div>
+<div class="layer-mask" id="layer-mask"></div>
 </body>
 
 <!-- scripts -->
@@ -113,16 +113,24 @@ $(document).ready(function(){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
 		myconfirm.find("#confirm_content p").text(msg);
+		$("#layer-mask").off("click");
+		$("#layer-mask").on("click",function(){
+			myconfirm.hide();
+			$("#layer-mask").hide();
+		});
 		myconfirm.find("#confirm").off("click");
 		myconfirm.find("#confirm").on("click",function(){
 			callback();
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.find("#close").off("click");
 		myconfirm.find("#close").on("click",function(){
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.show();
+		$("#layer-mask").show();
 	}
 });
 

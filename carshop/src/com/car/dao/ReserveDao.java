@@ -35,6 +35,35 @@ public class ReserveDao {
 		return jdbcTemplate.queryForList(sql,openid);
 	}
 	
+	/**
+	 * 获取厂商数据
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarBrandInfo(){
+		String sql = "select id,name from car_brand";
+		return jdbcTemplate.queryForList(sql);
+	}
+
+	/**
+	 * 获取车系数据
+	 * @param carBrandid
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarSeries(String carBrandid){
+		String sql = "select id,name from car_series where car_brand_id=?";
+		return jdbcTemplate.queryForList(sql,carBrandid);
+	}
+	
+	/**
+	 * 获取车型数据
+	 * @param carSeriesid
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarModel(String carSeriesid){
+		String sql = "select id,model,model_code from car_model where car_series_id=?";
+		return jdbcTemplate.queryForList(sql,carSeriesid);
+	}
+	
 	
 	/**
 	 * 获取4s店的班组

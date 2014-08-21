@@ -3,6 +3,8 @@ package com.car.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.car.dao.ClientDao;
 import com.car.dao.ReserveDao;
+import com.car.utils.Utils;
 
 @Service
 public class ReserveService {
@@ -39,6 +42,40 @@ public class ReserveService {
 	 */
 	public List<Map<String,Object>> getClientCarsInfo(String openid){
 		List<Map<String,Object>> result=getReserveDAO().getClientCar(openid);
+		return result;
+	}
+	
+	private Comparator<Map<String,Object>> compartor=new Comparator<Map<String,Object>>() {
+		
+		@Override
+		public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+			String a=(String)o1.get("type");
+			String b=(String)o2.get("type");
+			return a.compareTo(b);
+		}
+	};
+	
+	/**
+	 * 获取厂商数据并按照数字英文字母排序
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarBrandInfo(){
+		List<Map<String,Object>> result=new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> srcData=getReserveDAO().getCarBrandInfo();;
+		for(Map<String,Object> map:srcData){
+			String name=(String)map.get("name");
+			StringBuilder sb=new StringBuilder();
+			if(name!=null&&name.length()>0){
+				for(int i=0;i<name.length();i++){
+					String temp=Utils.convert(name.toCharArray()[i]+"");
+					sb.append(temp);
+				}
+				map.put("type", sb.toString());
+				result.add(map);
+			}
+		}
+		//排序
+		Collections.sort(result, this.compartor);
 		return result;
 	}
 	
@@ -326,5 +363,55 @@ public class ReserveService {
 	 */
 	public Map<String,Object> getMycarInfo(String mycarid){
 		return this.getReserveDAO().getMycarInfo(mycarid);
+	}
+	
+	/**
+	 * 获取厂商车系
+	 * @param carBrandid
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarSeries(String carBrandid){
+		List<Map<String,Object>> result=new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> srcData=getReserveDAO().getCarSeries(carBrandid);;
+		for(Map<String,Object> map:srcData){
+			String name=(String)map.get("name");
+			StringBuilder sb=new StringBuilder();
+			if(name!=null&&name.length()>0){
+				for(int i=0;i<name.length();i++){
+					String temp=Utils.convert(name.toCharArray()[i]+"");
+					sb.append(temp);
+				}
+				map.put("type", sb.toString());
+				result.add(map);
+			}
+		}
+		//排序
+		Collections.sort(result, this.compartor);
+		return result;
+	}
+	
+	/**
+	 * 获取车型数据
+	 * @param carSeriesid
+	 * @return
+	 */
+	public List<Map<String,Object>> getCarModel(String carSeriesid){
+		List<Map<String,Object>> result=new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> srcData=getReserveDAO().getCarModel(carSeriesid);;
+		for(Map<String,Object> map:srcData){
+			String name=(String)map.get("model");
+			StringBuilder sb=new StringBuilder();
+			if(name!=null&&name.length()>0){
+				for(int i=0;i<name.length();i++){
+					String temp=Utils.convert(name.toCharArray()[i]+"");
+					sb.append(temp);
+				}
+				map.put("type", sb.toString());
+				result.add(map);
+			}
+		}
+		//排序
+		Collections.sort(result, this.compartor);
+		return result;
 	}
 }

@@ -48,12 +48,14 @@ adsfasdfasdf
 adsfasdfasdf
 
 <div class="myconfirm">
-	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div><span style="color:#ee8c28;width:32px;height: 32;" class="glyphicon glyphicon-check"></span></div>
+	<div id="confirm_content" class="text-center" style="height: 105px;padding: 40px;"><p class="lead"></p></div>
 	<div>
 		<button type="button" class="btn btn-default close-btn" id="close">close</button>
 		<button type="button" class="btn confirm-btn" id="confirm">confirm</button>
 	</div>
 </div>
+	<div class="layer-mask" id="layer-mask"></div>
 
 <!-- scripts -->
 <script src="/lib/jquery/jquery-2.1.1.min.js"></script>
@@ -71,16 +73,24 @@ $(document).ready(function(){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
 		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#layer-mask").off("click");
+		myconfirm.find("#layer-mask").on("click",function(){
+			myconfirm.hide();
+			$("#layer-mask").hide();
+		});
 		myconfirm.find("#confirm").off("click");
 		myconfirm.find("#confirm").on("click",function(){
 			callback();
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.find("#close").off("click");
 		myconfirm.find("#close").on("click",function(){
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.show();
+		$("#layer-mask").show();
 	}
 	
 	$("#d").on("click",function(){

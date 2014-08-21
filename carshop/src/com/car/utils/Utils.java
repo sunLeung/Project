@@ -2,6 +2,8 @@ package com.car.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Utils {
@@ -25,14 +27,16 @@ public class Utils {
 	private static char[] firstLetter = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J','K',
 			'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z' };
 
-	public static char convert(String ch) {
+	public static String convert(String ch) {
+		if(isDefaultChar(ch))return ch;
+		if(!isChineseChar(ch))return "";
 		byte[] bytes = new byte[2];
 		try {
 			bytes = ch.getBytes("GB2312");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		char result = '-';
+		String result = "-";
 		int secPosValue = 0;
 		int i;
 		for (i = 0; i < bytes.length; i++) {
@@ -42,14 +46,34 @@ public class Utils {
 		for (i = 0; i < 23; i++) {
 			if (secPosValue >= secPosValueList[i]
 					&& secPosValue < secPosValueList[i + 1]) {
-				result = firstLetter[i];
+				result = String.valueOf(firstLetter[i]);
 				break;
 			}
 		}
 		return result;
 	}
 	
+	private static boolean isChineseChar(String str) {
+		boolean temp = false;
+		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+		Matcher m = p.matcher(str);
+		if (m.find()) {
+			temp = true;
+		}
+		return temp;
+	}
+	private static boolean isDefaultChar(String str) {
+		boolean temp = false;
+		Pattern p = Pattern.compile("[0-9a-zA-Z]");
+		Matcher m = p.matcher(str);
+		if (m.find()) {
+			temp = true;
+		}
+		return temp;
+	}
+	
 	public static void main(String[] args) {
+		for(int i=0;i<10;i++)
 		System.out.println(createUUID());
 	}
 }

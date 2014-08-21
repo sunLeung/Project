@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE HTML>
@@ -26,7 +28,7 @@
 			
 			<!-- 第一页 -->
 			<!-- 选择车 begin-->
-			<div class="item active" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 348px;">
+			<div class="item active" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 385px;">
 				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">我的车型</span></span>
 	  				<select class="form-control" id="select_mycar" name="carid">
@@ -36,56 +38,63 @@
 								<option value="${item.id}" modelCode="${item.model_code}">${item.model }</option>
 							</c:forEach>
 							</c:if>
-							<c:if test="${empty mycar}" >
-								<option value="-1">暂无绑定车辆</option>
-							</c:if>
+							<option value="-1">其他</option>
 						</optgroup>
 	  				</select>
 				</div>
 				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">厂牌</span></span>
 	  				<select class="form-control" id="select_brand" name="carid">
-	  					<optgroup label="A">
-	  						<option>奥迪</option>
-	  						<option>阿斯顿马丁</option>
-	  						<option>AC宝马</option>
-	  					</optgroup>
-	  					<optgroup label="B">
-	  						<option>宝马</option>
-	  						<option>奔驰</option>
-	  						<option>本田</option>
-						</optgroup>
+	  					<%
+	  						List<Map<String,Object>> carBrands=(List<Map<String,Object>>)request.getAttribute("carBrands");
+	  						if(carBrands!=null&&carBrands.size()>0){
+	  							String l="";
+	  							for(int i=0;i<carBrands.size();i++){
+	  								Map<String,Object> map=carBrands.get(i);
+	  								String type=(String)map.get("type");
+	  								String t=type.substring(0, 1);
+	  								if(!t.equals(l)){
+	  									l=t;
+	  									if(i==0){
+			  								%>
+			  									<optgroup label="<%=l %>">
+			  								<%
+	  									}else{
+			  								%>
+			  									</optgroup>
+			  									<optgroup label="<%=l %>">
+			  								<%
+	  									}
+	  								}
+	  								%>
+	  								<option value="<%=map.get("id") %>" ><%=map.get("name") %></option>
+	  								<%
+	  							}
+	  							%>
+									</optgroup>
+								<%
+	  						}else{
+	  							%>
+	  								<option value="-1">暂无数据</option>
+	  							<%
+	  						} %>
 	  				</select>
 				</div>
 				<div class="input-group" style="margin-bottom: 10px;">
 	  				<span class="input-group-addon"><span class="inputLabel">车系</span></span>
 	  				<select class="form-control" id="select_series" name="carid">
-	  					<optgroup label="A">
-	  						<option>奥迪</option>
-	  						<option>阿斯顿马丁</option>
-	  						<option>AC宝马</option>
-	  					</optgroup>
-	  					<optgroup label="B">
-	  						<option>宝马</option>
-	  						<option>奔驰</option>
-	  						<option>本田</option>
-						</optgroup>
+	  					<option value="-1">暂无数据</option>
 	  				</select>
 				</div>
-				<div class="input-group" style="margin-bottom: 10px;">
+				<div class="input-group">
 	  				<span class="input-group-addon"><span class="inputLabel">型号</span></span>
 	  				<select class="form-control" id="select_model" name="carid">
-	  					<optgroup label="A">
-	  						<option>奥迪</option>
-	  						<option>阿斯顿马丁</option>
-	  						<option>AC宝马</option>
-	  					</optgroup>
-	  					<optgroup label="B">
-	  						<option>宝马</option>
-	  						<option>奔驰</option>
-	  						<option>本田</option>
-						</optgroup>
+	  					<option value="-1">暂无数据</option>
 	  				</select>
+				</div>
+				<div class="input-group"  style="margin-bottom: 10px;">
+					<span class="input-group-addon"><span class="inputLabel">其他车型</span></span>
+					<input class="form-control" id="other_car_model" type="text" placeholder="手动填写车型"/>
 				</div>
 				<div id="other_car">
 					<div class="input-group" >
@@ -99,7 +108,7 @@
 					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
 				</div>
 				<div class="text-right">
-					<span style="color:#a94442;padding: 8px;">*请选择车</span>
+					<span style="color:#a94442;padding: 8px;" id="selectCarResult"></span>
 					<button id="next" class="btn btn-default" style="color:#ee8c28;">下一步<span class="glyphicon glyphicon-chevron-right"></span></button>
 				</div>
 			</div>
@@ -107,7 +116,7 @@
 			<!-- 第一页 end -->
 			
 			<!-- 第二页 begin -->
-			<div class="item" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 348px;">
+			<div class="item" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 385px;">
 			<!-- 选择店 begin-->
 			<div style="margin-bottom: 10px;">
 				<div class="input-group">
@@ -182,7 +191,7 @@
 </div>
 
 
-<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1000;">
+<div class="container-fluid" style="position: fixed;bottom: 0px;left:1.5px;right:0px;z-index:1070;">
 	<div class="row">
 		<div class="btn-group" style="width: 100%;">
 		  <div class="col-xs-4 text-center btn btn-default"><span class="glyphicon glyphicon-plus" style="color:#ee8c28;margin-right:3px;"></span><a class="navi_text" href="/reserve/create.do?openid=${openid}">新建预约</a></div>
@@ -196,11 +205,11 @@
 <div class="myconfirm">
 	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
 	<div>
-		<button type="button" class="btn btn-default close-btn" id="close">close</button>
-		<button type="button" class="btn confirm-btn" id="confirm">confirm</button>
+		<button type="button" class="btn btn-default close-btn" id="close">取消</button>
+		<button type="button" class="btn confirm-btn" id="confirm">确定</button>
 	</div>
 </div>
-
+<div class="layer-mask" id="layer-mask"></div>
 </body>
 
 <!-- scripts -->
@@ -216,20 +225,132 @@ $(document).ready(function(){
 		$('.carousel').carousel('prev');
 	});
 	$("#next").on("click",function(){
+		//判断是否已经选择好车辆数据
+		var select_mycar=$("#select_mycar").val();
+		var select_model=$("#select_model").val();
+		var other_car_model=$("#other_car_model").val();
+		if(select_mycar==-1&&select_model==-1&&other_car_model==""){
+			$("#selectCarResult").empty();
+			$("#selectCarResult").text("*请选择\"我的车型\"或者新车型,如果没找到想要车型,请手动填写。");
+			return;
+		}
+		var car_num=$("#car_num").val();
+		var car_vin=$("#car_vin").val();
+		if(car_num==""&&car_vin==""){
+			$("#selectCarResult").empty();
+			$("#selectCarResult").text("*车牌和车架号必须填写其中之一");
+			return;
+		}
+		
 		$('.carousel').carousel('next');
 	});
 	
 	//加载客户车辆信息
 	loadMaycar();
 	
-	$("#select_mycar").on("click",function(){
+	$("#select_mycar").on("change",function(){
 		loadMaycar();
 	});
+	
+	//加载车系数据
+	$("#select_brand").on("change",function(){
+		loadCarSeries();
+	});
+	//加载车型数据
+	$("#select_series").on("change",function(){
+		loadCarModel();
+	});
+	
+	loadCarSeries();
+	loadCarModel();
+	
+	function loadCarSeries(){
+		var carBrandid=$("#select_brand").val();
+		if(carBrandid!=-1){
+			$.ajax({
+	            type: "GET",
+	            url: "/reserve/getCarSeries.do",
+	            data: {carBrandid:carBrandid},
+	            dataType: "json",
+	            success: function(data){
+	           		var dataObj=eval(data);
+	           		var l="";
+	           		var element;
+	           		$("#select_series").empty();
+	           		if(dataObj.length>0){
+		           		for(i=0;i<dataObj.length;i++){
+							var map=dataObj[i];
+							var type=map.type;
+							var t=type.substring(0, 1);
+							if(t!=l){
+								l=t;
+								if(i==0){
+	  								element+="<optgroup label='"+l+"'>";
+								}else{
+									element+="</optgroup><optgroup label='"+l+"'>";
+								}
+							}
+							element+="<option value='"+map.ID+"' >"+map.NAME+"</option>";
+		           		}
+		           		$("#select_series").append(element);
+	           		}else{
+	           			$("#select_series").append("<option value='-1'>暂无数据</option>");
+	           		}
+	           		loadCarModel();
+	           		console.log(dataObj);
+	            }
+	        });
+		}
+	}
+	
+	function loadCarModel(){
+		var carSeriesid=$("#select_series").val();
+		if(carSeriesid!=-1){
+			$.ajax({
+	            type: "GET",
+	            url: "/reserve/getCarModel.do",
+	            data: {carSeriesid:carSeriesid},
+	            dataType: "json",
+	            success: function(data){
+	           		var dataObj=eval(data);
+	           		var l="";
+	           		var element;
+	           		$("#select_model").empty();
+	           		if(dataObj.length>0){
+		           		for(i=0;i<dataObj.length;i++){
+							var map=dataObj[i];
+							var type=map.type;
+							var t=type.substring(0, 1);
+							if(t!=l){
+								l=t;
+								if(i==0){
+	  								element+="<optgroup label='"+l+"'>";
+								}else{
+									element+="</optgroup><optgroup label='"+l+"'>";
+								}
+							}
+							element+="<option value='"+map.ID+"' modelCode='"+map.MODEL_CODE+"'>"+map.MODEL+"</option>";
+		           		}
+		           		$("#select_model").append(element);
+	           		}else{
+	           			$("#select_model").append("<option value='-1'>暂无数据</option>");
+	           		}
+	           		console.log(dataObj);
+	            }
+	        });
+		}else{
+			$("#select_model").empty();
+			$("#select_model").append("<option value='-1'>暂无数据</option>");
+		}
+	}
 	
 	function loadMaycar(){
 		var mycarid=$("#select_mycar").val();
 		//var modelcode=$("#select_mycar").find("option:selected").attr("modelcode");
 		if(mycarid!=-1){
+			$("#select_brand").attr("disabled",true);
+			$("#select_series").attr("disabled",true);
+			$("#select_model").attr("disabled",true);
 			$.ajax({
 	            type: "GET",
 	            url: "/reserve/getMycarInfo.do",
@@ -250,6 +371,12 @@ $(document).ready(function(){
 	           		}
 	            }
 	        });
+		}else{
+			$("#select_brand").attr("disabled",false);
+			$("#select_series").attr("disabled",false);
+			$("#select_model").attr("disabled",false);
+			$("#car_num").val("");
+			$("#car_vin").val("");
 		}
 	}
 	
@@ -472,16 +599,24 @@ $(document).ready(function(){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
 		myconfirm.find("#confirm_content p").text(msg);
+		$("#layer-mask").off("click");
+		$("#layer-mask").on("click",function(){
+			myconfirm.hide();
+			$("#layer-mask").hide();
+		});
 		myconfirm.find("#confirm").off("click");
 		myconfirm.find("#confirm").on("click",function(){
 			callback();
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.find("#close").off("click");
 		myconfirm.find("#close").on("click",function(){
 			myconfirm.hide();
+			$("#layer-mask").hide();
 		});
 		myconfirm.show();
+		$("#layer-mask").show();
 	}
 });
 
