@@ -108,7 +108,6 @@
 					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
 				</div>
 				<div class="text-right">
-					<span style="color:#a94442;padding: 8px;" id="selectCarResult"></span>
 					<button id="next" class="btn btn-default" style="color:#ee8c28;">下一步<span class="glyphicon glyphicon-chevron-right"></span></button>
 				</div>
 			</div>
@@ -203,7 +202,7 @@
 
 <!-- 二次确认框 -->
 <div class="myconfirm">
-	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div id="confirm_content" class="text-center" style="padding:20px;"><p></p></div>
 	<div>
 		<button type="button" class="btn btn-default close-btn" id="close">取消</button>
 		<button type="button" class="btn confirm-btn" id="confirm">确定</button>
@@ -231,7 +230,8 @@ $(document).ready(function(){
 		var other_car_model=$("#other_car_model").val();
 		if(select_mycar==-1&&select_model==-1&&other_car_model==""){
 			$("#selectCarResult").empty();
-			$("#selectCarResult").text("*请选择\"我的车型\"或者新车型,如果没找到想要车型,请手动填写。");
+			var msg="*请选择\"我的车型\"或者\"其他车型\",如果没找到想要车型,请手动填写车型。";
+			myconfirm(msg,function(){});
 			return;
 		}
 		var car_num=$("#car_num").val();
@@ -246,10 +246,10 @@ $(document).ready(function(){
 	});
 	
 	//加载客户车辆信息
-	loadMaycar();
+	loadMycar();
 	
 	$("#select_mycar").on("change",function(){
-		loadMaycar();
+		loadMycar();
 	});
 	
 	//加载车系数据
@@ -314,7 +314,7 @@ $(document).ready(function(){
 	            success: function(data){
 	           		var dataObj=eval(data);
 	           		var l="";
-	           		var element;
+	           		var element="";
 	           		$("#select_model").empty();
 	           		if(dataObj.length>0){
 		           		for(i=0;i<dataObj.length;i++){
@@ -344,13 +344,14 @@ $(document).ready(function(){
 		}
 	}
 	
-	function loadMaycar(){
+	function loadMycar(){
 		var mycarid=$("#select_mycar").val();
 		//var modelcode=$("#select_mycar").find("option:selected").attr("modelcode");
 		if(mycarid!=-1){
 			$("#select_brand").attr("disabled",true);
 			$("#select_series").attr("disabled",true);
 			$("#select_model").attr("disabled",true);
+			$("#other_car_model").attr("disabled",true);
 			$.ajax({
 	            type: "GET",
 	            url: "/reserve/getMycarInfo.do",
@@ -375,6 +376,7 @@ $(document).ready(function(){
 			$("#select_brand").attr("disabled",false);
 			$("#select_series").attr("disabled",false);
 			$("#select_model").attr("disabled",false);
+			$("#other_car_model").attr("disabled",false);
 			$("#car_num").val("");
 			$("#car_vin").val("");
 		}
@@ -505,47 +507,63 @@ $(document).ready(function(){
 	
 	
 	$("#create").on("click",function(){
-		var msg="确定预约？";
+		var btn = $(this);
+		var openid=$("#openid").val();
+		var selectMycar=$("#select_mycar").val();
+		var model="";
+		var modelCode="";
+		//选择了自己的车型
+		if(selectMycar!=-1){
+			modelCode=$("#select_mycar").find("option:selected").attr("modelcode");
+			model=$("#select_mycar").find("option:selected").text();
+		}else{//选择了其他车
+			//判断是否手动填写其他车型
+			var other_car_model=$("#other_car_model").val();
+			if(other_car_model==null||other_car_model==""){
+				modelCode=$("#select_model").find("option:selected").attr("modelcode");
+				model=$("#select_model").find("option:selected").text();
+			}else{//手动填写了
+				model=other_car_model;
+			}
+		}
+		
+		var carNum=$("#car_num").val();
+		var carVin=$("#car_vin").val();
+		if(carNum==""&&carVin==""){
+			showResult(0,"车牌号和车架号至少填写一个。");
+			return;
+		}
+		var shopid=$("#select_shop").val();
+		var shopName=$("#select_shop").find("option:selected").text();
+		if(shopid==-1){
+			showResult(0,"请选择4S店。");
+			return;
+		}
+		var timeid=$("#select_time").val();
+		if(timeid==-1){
+			showResult(0,"请选择预约时间。");
+			return;
+		}
+		var teamid=$("#select_team").val();
+		var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
+		var teamName=$("#select_team").find("option:selected").text();
+		if(teamid==-1){
+			showResult(0,"请选择班组。");
+			return;
+		}
+		var consultantid=$("#select_consultant").val();
+		var consultantName=$("#select_consultant").find("option:selected").text();
+		if(consultantid==-1){
+			showResult(0,"请选择顾问。");
+			return;
+		}
+		var msg="<div class='text-left'><span>车型:"+model+"<br>车牌:"+carNum+"<br>车架号:"+carVin+"<br>4S店:"+shopName+"<br>时间:"+timeid+"<br>班组:"+teamName+"<br>顾问:"+consultantName+"<br></span></div><strong>确定预约？</strong>";
 		myconfirm(msg,function(){
-			var btn = $(this);
-			var openid=$("#openid").val();
-			var carid=$("#select_car").val();
-			var isOther=false;
-			var otherCarNum=$("#other_car_num").val();
-			var otherCarVin=$("#other_car_vin").val();
-			if(carid=="other"){
-				if(otherCarNum==""&&otherCarVin==""){
-					showResult(0,"车牌号和车架号至少填写一个。");
-					return;
-				}
-				isOther=true;
-			}
-			var shopid=$("#select_shop").val();
-			if(shopid==-1){
-				showResult(0,"请选择4S店。");
-				return;
-			}
-			var timeid=$("#select_time").val();
-			if(timeid==-1){
-				showResult(0,"请选择预约时间。");
-				return;
-			}
-			var teamid=$("#select_team").val();
-			var appointmentid=$("#select_team").find("option:selected").attr('appointmentid');
-			if(teamid==-1){
-				showResult(0,"请选择班组。");
-				return;
-			}
-			var consultantid=$("#select_consultant").val();
-			if(consultantid==-1){
-				showResult(0,"请选择顾问。");
-				return;
-			}
 			btn.button('loading');
 			$.ajax({
 	            type: "POST",
 	            url: "/reserve/save.do",
-	            data: {openid:openid,appointmentid:appointmentid,carid:carid,isOther:isOther,otherCarNum:otherCarNum,otherCarVin:otherCarVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid},
+	            data: {openid:openid,model:model,modelCode:modelCode,carNum:carNum,carVin:carVin,shopid:shopid,timeid:timeid,teamid:teamid,consultantid:consultantid,appointmentid:appointmentid},
 	            dataType: "json",
 	            success: function(data){
 	            	btn.button('reset');
@@ -598,7 +616,7 @@ $(document).ready(function(){
 	function myconfirm(msg,callback){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
-		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#confirm_content p").html(msg);
 		$("#layer-mask").off("click");
 		$("#layer-mask").on("click",function(){
 			myconfirm.hide();

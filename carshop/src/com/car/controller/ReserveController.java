@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.car.service.ReserveService;
-import com.car.utils.Utils;
 
 @Controller
 @RequestMapping(value = "/reserve")
@@ -66,27 +65,26 @@ public class ReserveController {
 	@RequestMapping(value = "/save")
 	public @ResponseBody Map<String, String> create(
 			@RequestParam(value = "openid", required = true) String openid,
-			@RequestParam(value = "appointmentid", required = true) String appointmentid,
-			@RequestParam(value = "carid", required = true) String carid,
-			@RequestParam(value = "isOther", required = true) boolean isOther,
-			@RequestParam(value = "otherCarNum", required = true) String otherCarNum,
-			@RequestParam(value = "otherCarVin", required = true) String otherCarVin,
+			@RequestParam(value = "model", required = true) String model,
+			@RequestParam(value = "modelCode", required = true) String modelCode,
+			@RequestParam(value = "carNum", required = true) String carNum,
+			@RequestParam(value = "carVin", required = true) String carVin,
 			@RequestParam(value = "shopid", required = true) String shopid,
 			@RequestParam(value = "timeid", required = true) String timeid,
 			@RequestParam(value = "teamid", required = true) String teamid,
 			@RequestParam(value = "consultantid", required = true) String consultantid,
-			ModelMap model) {
+			@RequestParam(value = "appointmentid", required = true) String appointmentid) {
 		System.out.println("openid:"+openid);
-		System.out.println("appointmentid:"+appointmentid);
-		System.out.println("carid:"+carid);
-		System.out.println("isOther:"+isOther);
-		System.out.println("otherCarNum:"+otherCarNum);
-		System.out.println("otherCarVin:"+otherCarVin);
+		System.out.println("model:"+model);
+		System.out.println("modelCode:"+modelCode);
+		System.out.println("carNum:"+carNum);
+		System.out.println("carVin:"+carVin);
 		System.out.println("shopid:"+shopid);
 		System.out.println("timeid:"+timeid);
 		System.out.println("teamid:"+teamid);
 		System.out.println("consultantid:"+consultantid);
-		return this.getService().createAppointment(openid, appointmentid, carid, isOther, otherCarNum, otherCarVin,shopid, timeid, teamid, consultantid);
+		System.out.println("appointmentid:"+appointmentid);
+		return this.getService().createAppointment(openid, model, modelCode, carNum, carVin, shopid,timeid, teamid, consultantid,appointmentid);
 	}
 	
 	@RequestMapping(value = "/query")

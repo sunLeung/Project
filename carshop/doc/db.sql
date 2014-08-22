@@ -9,7 +9,7 @@ CREATE TABLE vehicle (
 DROP TABLE appointment_team;
 CREATE TABLE appointment_team (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL,
   name varchar(128) DEFAULT NULL,
   description varchar(128) DEFAULT NULL,
   display_order varchar(128) DEFAULT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE appointment_team (
 DROP TABLE appointment_consultant;
 CREATE TABLE appointment_consultant (
   id char(32) NOT NULL,
-  branch_id char(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL,
   name varchar(128) DEFAULT NULL,
   display_order varchar(128) DEFAULT NULL,
   operate_user char(32) DEFAULT NULL,
@@ -81,14 +81,15 @@ CREATE TABLE appointment_detail (
   team_id char(32) DEFAULT NULL,
   consultant_id char(32) DEFAULT NULL,
   client_id char(32) DEFAULT NULL,
-  register_no VARCHAR2(20) DEFAULT NULL,
   vin VARCHAR2(20) DEFAULT NULL,
+  register_no VARCHAR2(20) DEFAULT NULL,
   status INTEGER DEFAULT NULL,
   appointment_start DATE DEFAULT NULL,
-  appointment_end DATE DEFAULT NULL,
-  model_code VARCHAR2(20) DEFAULT NULL,
-  model VARCHAR2(20) DEFAULT NULL,
-  branch_id char(32) DEFAULT NULL
+  appointment_end	DATE DEFAULT NULL,
+  model_code VARCHAR2(32) DEFAULT NULL,
+  model VARCHAR2(32) DEFAULT NULL,
+  own_no VARCHAR2(3) DEFAULT NULL,
+  appointment_team_remains_id char(32) DEFAULT NULL
 );
 
 
@@ -135,6 +136,7 @@ CREATE TABLE vehicle (
 
 
 ---------------------------------活动-------------------------------
+
 
 DROP TABLE maketing_event;
 CREATE TABLE maketing_event (

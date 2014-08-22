@@ -72,7 +72,7 @@
 
 <!-- 二次确认框 -->
 <div class="myconfirm">
-	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div id="confirm_content" class="text-center" style="padding:20px;"><p></p></div>
 	<div>
 		<button type="button" class="btn btn-default close-btn" id="close">取消</button>
 		<button type="button" class="btn confirm-btn" id="confirm">确定</button>
@@ -125,7 +125,7 @@ $(document).ready(function(){
 	function myconfirm(msg,callback){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
-		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#confirm_content p").html(msg);
 		$("#layer-mask").off("click");
 		$("#layer-mask").on("click",function(){
 			myconfirm.hide();

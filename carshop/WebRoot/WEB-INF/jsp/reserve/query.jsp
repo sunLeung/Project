@@ -25,31 +25,31 @@
 		<div class="callout callout-info">
 			<table>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">时间：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">时间：</td>
 					<td><fmt:formatDate value="${item.appointment_start}" pattern="yyyy-MM-dd HH:mm" />至<fmt:formatDate value="${item.appointment_end}" pattern="yyyy-MM-dd HH:mm" /></td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车型：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">车型：</td>
 					<td>${item.model}</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车牌：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">车牌：</td>
 					<td>${item.register_no}</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">车架：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">车架：</td>
 					<td>${item.vin}</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">4S店：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">4S店：</td>
 					<td>${item.print_title}</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">地址：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">地址：</td>
 					<td>${item.address}</td>
 				</tr>
 				<tr>
-					<td style="font-weight:bolder;width:45px;vertical-align: top;text-align: right;">电话：</td>
+					<td style="font-weight:bolder;width:48px;vertical-align: top;text-align: right;">电话：</td>
 					<td>${item.telephone}</td>
 				</tr>
 			</table>
@@ -76,7 +76,7 @@
 
 <!-- 二次确认框 -->
 <div class="myconfirm">
-	<div id="confirm_content" class="text-center" style="height: 105px;padding: 50px;"><p class="lead"></p></div>
+	<div id="confirm_content" class="text-center" style="padding:20px;"><p></p></div>
 	<div>
 		<button type="button" class="btn btn-default close-btn" id="close">取消</button>
 		<button type="button" class="btn confirm-btn" id="confirm">确定</button>
@@ -92,27 +92,30 @@
 <script>
 $(document).ready(function(){
 	$("button[name='delete']").on("click",function(){
+		var msg="确定取消？";
 		var aid=$(this).attr("aid");
-		$.ajax({
-            type: "GET",
-            url: "/reserve/delete.do",
-            data: {aid:aid},
-            dataType: "json",
-            success: function(data){
-           		var dataObj=eval(data);
-           		console.log(dataObj.code);
-           		if(dataObj.code==1){
-           			location.reload();
-           			console.log("remove");
-           		}
-            }
-        	});
+		myconfirm(msg,function(){
+			$.ajax({
+	            type: "GET",
+	            url: "/reserve/delete.do",
+	            data: {aid:aid},
+	            dataType: "json",
+	            success: function(data){
+	           		var dataObj=eval(data);
+	           		console.log(dataObj.code);
+	           		if(dataObj.code==1){
+	           			location.reload();
+	           			console.log("remove");
+	           		}
+	            }
+			});
+     	});
 	});
 	/**二次确认框*/
 	function myconfirm(msg,callback){
 		var myconfirm=$(".myconfirm");
 		myconfirm.find("#confirm_content p").empty();
-		myconfirm.find("#confirm_content p").text(msg);
+		myconfirm.find("#confirm_content p").html(msg);
 		$("#layer-mask").off("click");
 		$("#layer-mask").on("click",function(){
 			myconfirm.hide();

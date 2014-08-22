@@ -98,8 +98,8 @@ CREATE TABLE appointment_detail (
   appointment_end	DATE DEFAULT NULL,
   model_code VARCHAR2(32) DEFAULT NULL,
   model VARCHAR2(32) DEFAULT NULL,
-  own_no VARCHAR2(3) DEFAULT NULL
-
+  own_no VARCHAR2(3) DEFAULT NULL,
+  appointment_team_remains_id char(32) DEFAULT NULL
 );
 
 DROP TABLE appointment_rating;

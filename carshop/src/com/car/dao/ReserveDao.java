@@ -174,29 +174,25 @@ public class ReserveDao {
 	
 	/**
 	 * 创建预约
-	 * @param openid
-	 * @param appointmentStart
-	 * @param appointmentEnd
 	 * @param appointmentid
-	 * @param carid
-	 * @param isOther
-	 * @param otherCarNum
-	 * @param otherCarVin
-	 * @param Shopid
-	 * @param timeid
 	 * @param teamid
 	 * @param consultantid
+	 * @param clientid
+	 * @param carVin
+	 * @param carNum
+	 * @param ds
+	 * @param de
+	 * @param modelCode
+	 * @param model
+	 * @param shopid
 	 * @return
 	 */
-	public synchronized int createAppointment(String clientid,
-			Date appointmentStart,Date appointmentEnd, String appointmentid, String carid,
-			boolean isOther, String otherCarNum, String otherCarVin,String Shopid,
-			String timeid, String teamid, String consultantid) {
-		String sql = "insert into appointment_detail(id,team_id,consultant_id,client_id,appointment_start,appointment_end,vin,register_no,own_no,status) values(?,?,?,?,?,?,?,?,?,?)";
+	public synchronized int createAppointment(String appointmentid,String teamid,String consultantid,String clientid,String carVin,String carNum,Date ds,Date de,String modelCode,String model,String shopid) {
+		String sql = "insert into appointment_detail(id,team_id,consultant_id,client_id,vin,register_no,status,appointment_start,appointment_end,model_code,model,own_no,appointment_team_remains_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// 再次检查是否还有预约名额
 		int remain = getAppointmentRemain(appointmentid);
 		if(remain>0){
-			int r = this.jdbcTemplate.update(sql, Utils.createUUID(), teamid,consultantid, clientid, appointmentStart,appointmentEnd, otherCarVin,otherCarNum,Shopid, 1);
+			int r = this.jdbcTemplate.update(sql, Utils.createUUID(), teamid,consultantid, clientid, carVin,carNum,1,ds,de,modelCode,model,shopid,appointmentid);
 			if (r > 0) {
 				String updateRemains = "update appointment_team_remains set remains=(remains-1) where id=?";
 				return this.jdbcTemplate.update(updateRemains, appointmentid);
@@ -241,8 +237,14 @@ public class ReserveDao {
 	 * @return
 	 */
 	public int deleteAppointment(String appointmentid){
+		System.out.println(appointmentid);
 		String sql="update appointment_detail set status=? where id=?";
-		return this.jdbcTemplate.update(sql,2,appointmentid);
+		int r = this.jdbcTemplate.update(sql,2,appointmentid);
+		if(r>0){
+			String updateSql="update appointment_team_remains set remains=(remains+1) where id=(select appointment_team_remains_id from appointment_detail where id=?)";
+			return this.jdbcTemplate.update(updateSql,appointmentid);
+		}
+		return 0;
 	}
 	
 	/**
