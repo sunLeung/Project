@@ -29,9 +29,9 @@
 			<!-- 第一页 -->
 			<!-- 选择车 begin-->
 			<div class="item active" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 385px;">
-				<div class="input-group" style="margin-bottom: 10px;">
+				<div class="input-group" style="margin-bottom: 10px;height:34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">我的车型</span></span>
-	  				<select class="form-control" id="select_mycar" name="carid">
+	  				<select class="form-control" id="select_mycar" name="carid" style="height: 34px;">
 	  					<optgroup label="我的车型">
 							<c:if test="${!empty mycar}" >
 							<c:forEach var="item" items="${mycar}" varStatus="status"> 
@@ -42,9 +42,9 @@
 						</optgroup>
 	  				</select>
 				</div>
-				<div class="input-group" style="margin-bottom: 10px;">
+				<div class="input-group" style="margin-bottom: 10px;height:34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">厂牌</span></span>
-	  				<select class="form-control" id="select_brand" name="carid">
+	  				<select class="form-control" id="select_brand" name="carid" style="height: 34px;">
 	  					<%
 	  						List<Map<String,Object>> carBrands=(List<Map<String,Object>>)request.getAttribute("carBrands");
 	  						if(carBrands!=null&&carBrands.size()>0){
@@ -80,30 +80,30 @@
 	  						} %>
 	  				</select>
 				</div>
-				<div class="input-group" style="margin-bottom: 10px;">
+				<div class="input-group" style="margin-bottom: 10px;height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">车系</span></span>
-	  				<select class="form-control" id="select_series" name="carid">
+	  				<select class="form-control" id="select_series" name="carid" style="height: 34px;">
 	  					<option value="-1">暂无数据</option>
 	  				</select>
 				</div>
-				<div class="input-group">
+				<div class="input-group" style="height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">型号</span></span>
-	  				<select class="form-control" id="select_model" name="carid">
+	  				<select class="form-control" id="select_model" name="carid" style="height: 34px;">
 	  					<option value="-1">暂无数据</option>
 	  				</select>
 				</div>
-				<div class="input-group"  style="margin-bottom: 10px;">
+				<div class="input-group"  style="margin-bottom: 10px;height: 34px;">
 					<span class="input-group-addon"><span class="inputLabel">其他车型</span></span>
-					<input class="form-control" id="other_car_model" type="text" placeholder="手动填写车型"/>
+					<input class="form-control" style="height: 34px;" id="other_car_model" type="text" placeholder="手动填写车型"/>
 				</div>
 				<div id="other_car">
-					<div class="input-group" >
+					<div class="input-group" style="height: 34px;">
 						<span class="input-group-addon"><span class="inputLabel">车牌</span></span>
-						<input class="form-control" id="car_num" type="text" placeholder="填写车牌号"/>
+						<input class="form-control" style="height: 34px;" id="car_num" type="text" placeholder="填写车牌号"/>
 					</div>
-					<div class="input-group" >
+					<div class="input-group" style="height: 34px;">
 						<span class="input-group-addon"><span class="inputLabel">车架号</span></span>
-						<input class="form-control" id="car_vin" type="text" placeholder="填写车架号"/>
+						<input class="form-control" style="height: 34px;" id="car_vin" type="text" placeholder="填写车架号"/>
 					</div>
 					<div class="alert alert-warning" style="padding: 8px;" role="alert">*请填写车牌或车架号</div>
 				</div>
@@ -118,9 +118,9 @@
 			<div class="item" style="border: 1px solid #ee8c28;padding: 5px;border-radius:4px;height: 385px;">
 			<!-- 选择店 begin-->
 			<div style="margin-bottom: 10px;">
-				<div class="input-group">
+				<div class="input-group" style="height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">选择4s店</span></span>
-	  				<select class="form-control" id="select_shop" name="shopid">
+	  				<select class="form-control" id="select_shop" name="shopid" style="height: 34px;">
 	  					<c:if test="${empty shop}" >
 							<option value="-1">没有店铺</option>
 						</c:if>
@@ -146,9 +146,9 @@
 			
 			<!-- 选择时间 begin-->
 			<div style="margin-bottom: 10px;">
-				<div class="input-group">
+				<div class="input-group" style="height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">预约时间</span></span>
-	  				<select class="form-control" id="select_time" disabled="disabled" name="timeid">
+	  				<select class="form-control" style="height: 34px;" id="select_time" disabled="disabled" name="timeid">
 	  					<option value="-1">请先选择4s店</option>
 	  				</select>
 				</div>
@@ -157,9 +157,9 @@
 			
 			<!-- 选择班组 begin-->
 			<div style="margin-bottom: 10px;">
-				<div class="input-group">
+				<div class="input-group" style="height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">选择班组</span></span>
-	  				<select class="form-control" id="select_team" disabled="disabled" name="teamid">
+	  				<select class="form-control" style="height: 34px;" id="select_team" disabled="disabled" name="teamid">
 	  					<option value="-1">请先选择预约时间</option>
 	  				</select>
 				</div>
@@ -168,9 +168,9 @@
 			
 			<!-- 选择顾问 begin-->
 			<div style="margin-bottom: 10px;">
-				<div class="input-group">
+				<div class="input-group" style="height: 34px;">
 	  				<span class="input-group-addon"><span class="inputLabel">选择顾问</span></span>
-	  				<select class="form-control" id="select_consultant" disabled="disabled" name="consultantid">
+	  				<select class="form-control" style="height: 34px;" id="select_consultant" disabled="disabled" name="consultantid">
 	  					<option value="-1">请先选择预约时间</option>
 	  				</select>
 				</div>
